@@ -1,13 +1,13 @@
 import { Navigate } from "react-router-dom";
-import Index from '../../layout/main/index.jsx';
-import Login from './../../Pages/Login/Login';
-import Register from "../../Pages/SignUp/SignUp";
+import MainLayout from "../../layout/main/index.jsx";
+import Login from "../../view/auth/login/index.jsx";
+import SignUp from "../../view/auth/signup/index.jsx";
 // import ForgotPassword from '../../Pages/';
 
 const authRoutes = [
     {
         path: "/auth/",
-        element: <Index/>,
+        element: <MainLayout/>,
         children: [
             {
                 path: "",
@@ -19,7 +19,7 @@ const authRoutes = [
             },
             {
                 path: "register",
-                element: <Register/>
+                element:<SignUp />
             },
             // {
             //     path: "forgot-password",

@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 
-const ErrorPage = () => {
+export default function ErrorPage() {
     const navigate = useNavigate()
 
     return (
@@ -58,6 +58,4 @@ const ErrorPage = () => {
         </div>
       </section>
     )
-};
-
-export default ErrorPage;
+}

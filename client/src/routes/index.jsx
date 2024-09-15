@@ -1,7 +1,10 @@
 import { createBrowserRouter} from "react-router-dom";
 import MainLayout from "../layout/main/index.jsx";
-import ErrorPage from "../view/ErrorPage/ErrorPage.jsx";
+import Index from "../view/error-page/index.jsx";
 import HomePage from "../view/all/home/index.jsx";
+import authRoutes from "./auth/index.jsx";
+import adminRoutes from './admin/index';
+import userRoutes from './user/index';
 
 
 const routes = [
@@ -10,7 +13,7 @@ const routes = [
     {
         path: "/",
         element: <MainLayout />,
-        errorElement: <ErrorPage />,
+        errorElement: <Index />,
         children: [
             {
                 path: "/",
@@ -20,8 +23,11 @@ const routes = [
     },
     {
         path: "*",
-        element: <ErrorPage />
+        element: <Index />
     },
+    ...authRoutes,
+    ...adminRoutes,
+    ...userRoutes,
 ]
 
 const router = createBrowserRouter(

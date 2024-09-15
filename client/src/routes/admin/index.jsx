@@ -13,7 +13,19 @@ const adminRoutes = [
             {
                 path: "dashboard",
                 element: <div>Dashboard</div>
-            }
+            },
+            {
+                path: "Overview",
+                element: <div>Overview</div>
+            },
+            {
+                path: "users",
+                element: <div>Users</div>
+            },
+            {
+                path: "reports/performance",
+                element: <div>reports section</div>
+            },
         ]
     }
 ]

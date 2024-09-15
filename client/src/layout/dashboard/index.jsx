@@ -4,16 +4,17 @@ import { dashboardData } from "../../data/menu-items/index.jsx";
 import AccordionMenu from "../../components/link-accordion/index.jsx";
 import AccordionMenuLink from "../../components/menu-accordion/index.jsx";
 import Logo from "../../components/shared/logo/index.jsx";
+import { Outlet } from "react-router-dom";
 
 
 const Index = () => {
     const [isActive, setIsActive] = useState(false);
+    const [openAccordion, setOpenAccordion] = useState(null);
 
     const handleToggleLeft = () => {
         setIsActive(!isActive);
     };
 
-    const [openAccordion, setOpenAccordion] = useState(null);
     const handleToggle = (id) => {
         setOpenAccordion(openAccordion === id ? null : id);
     };
@@ -29,24 +30,14 @@ const Index = () => {
                     <div className="common-flex flex-col gap-1 w-full border-b border-b-gray-500 py-3">
                         <Logo />
                     </div>
+                    {/* all menu link are here map or called  */}
                     <div className="common-flex flex-col
                      gap-1">
-                        {/* <AccordionMenu
-                            icon={FaFacebookF}
-                            title="Reports"
-                            isOpen={openAccordion === 0}
-                            onToggle={() => handleToggle(0)}
-                        >
-                            <AccordionMenuLink pathName="/admin/reports/performance" linkTitle="Performance" />
-                            <AccordionMenuLink pathName="/admin/reports/conversion" linkTitle="Conversion" />
-                            <AccordionMenuLink pathName="/admin/reports/conversion-logs" linkTitle="Conversion Logs" />
-                            <AccordionMenuLink pathName="/admin/reports/click-logs" linkTitle="Click Logs" />
-                        </AccordionMenu> */}
                         {dashboardData.map((item) => (
                             item?.subMenu ? (
                                 <AccordionMenu
                                     key={item?.id}
-                                    icon={item?.icon} // You can map this to a specific icon if needed
+                                    icon={item?.icon}
                                     title={item?.title}
                                     isOpen={openAccordion === item?.id}
                                     onToggle={() => handleToggle(item?.id)}
@@ -68,9 +59,6 @@ const Index = () => {
                             )
                         ))}
                     </div>
-                    <div>
-
-                    </div>
                 </div>
 
                 {/* Top navbar */}
@@ -85,7 +73,7 @@ const Index = () => {
             </div>
 
             {/* Main Content */}
-            <div onClick={() => setIsActive(false)} className="pt-[5rem] w-full lg:w-[calc(100%-256px)] float-right shadow transition-all duration-200 p-5">
+            <div onClick={() => setIsActive(false)} className="pt-[5rem] w-full lg:w-[calc(100%-256px)] float-right transition-all duration-200 p-5">
                 <Outlet />
             </div>
         </div>

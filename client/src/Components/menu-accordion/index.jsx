@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { NavLink } from "react-router-dom";
 
-const AccordionMenuLink = ({ pathName, linkTitle, icon: Icon, handleClick }) => {
+export default function AccordionMenuLink({ pathName, linkTitle, icon: Icon, handleClick }){
   return (
     <NavLink
       onClick={handleClick}
@@ -23,6 +23,4 @@ const AccordionMenuLink = ({ pathName, linkTitle, icon: Icon, handleClick }) => 
       {linkTitle}
     </NavLink>
   );
-};
-
-export default AccordionMenuLink;
+}

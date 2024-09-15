@@ -30,19 +30,19 @@ const dashboardData = [
     { 
       id: 1, 
       title: "Overview", 
-      href: "/", 
+      href: "/admin/overview",  
       icon: MdSentimentSatisfied  
     },
     { 
       id: 2, 
       title: "Users", 
-      href: "/users", 
+      href: "/admin/users", 
       icon: FaUser  
     },
     { 
       id: 3, 
       title: "Reports", 
-      href: "/reports", 
+      href: "/admin/reports", 
       icon: MdReport,
       subMenu: [
         { 
@@ -66,27 +66,27 @@ const dashboardData = [
     { 
       id: 4, 
       title: "Settings", 
-      href: "/settings", 
+      href: "/admin/settings", 
       icon: MdSettings, 
       subMenu: [
         { 
           title: "Profile Settings", 
-          href: "/settings/profile", 
+          href: "/admin/settings/profile", 
         },
         { 
           title: "Security", 
-          href: "/settings/security", 
+          href: "/admin/settings/security", 
         },
         { 
           title: "Notifications", 
-          href: "/settings/notifications", 
+          href: "/admin/settings/notifications", 
         },
       ],
     },
     { 
       id: 5, 
       title: "Help & Support", 
-      href: "/help", 
+      href: "/admin/help", 
       icon: MdSupport
     },
   ];
