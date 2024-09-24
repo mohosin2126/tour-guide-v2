@@ -23,6 +23,7 @@
     "react-awesome-slider": "^4.1.0",
     "react-datepicker": "^4.23.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.53.0",
     "react-icons": "^4.12.0",
     "react-photo-album": "^2.3.0",
     "react-rating": "^2.0.5",

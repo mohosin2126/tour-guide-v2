@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-container {
+    @apply container mx-auto px-3 md:px-4 lg:px-10;
+}
+.common-flex{
+    @apply flex items-center justify-center w-full
+}
+.menu-link{
+    @apply flex items-start justify-start gap-1 text-[14px] font-medium px-3 py-2 w-full rounded-md
+}

@@ -1,0 +1,21 @@
+.accordion-head{
+    @apply max-w-md mx-auto w-full border-b border-transparent
+}
+.accordion-button{
+    @apply w-full bg-transparent  text-[#64748B] rounded   px-3 py-2  p-[8px]
+}
+.accordion-transition{
+    @apply transition-all duration-200 ease-out overflow-hidden
+}
+.accordion-component{
+    @apply mt-2  relative w-[180px] border-rose-500 ml-5
+}
+.accordion-menu{
+    @apply flex items-center justify-center gap-2 active:text-rose-500
+}
+.accordion-button-class{
+    @apply flex items-center justify-between gap-2
+}
+.accordion-ul{
+    @apply flex flex-col gap-1 
+}

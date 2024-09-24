@@ -11,7 +11,7 @@ const TourType = () => {
     const [categories] = useCategory([])
     
     return (
-        <div className="mt-10">
+        <div className="mt-10 custom-container">
             <h1 className="text-center font-serif text-3xl text-extrabold mt-10">Tour Type</h1>
             <p className="text-center mt-2 font-serif  text-base">Everything You Want Is Here</p>
             <div  className="mt-10">
