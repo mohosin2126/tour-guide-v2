@@ -1,7 +1,9 @@
-import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 export default function UserProfile({user}) {
+  const handleLogOut = ()=> {
+    console.log("user log out")
+  }
   return (
     <div className="lg:flex">
     <div className="dropdown dropdown-left items-center md:order-2 rtl:space-x-reverse">
@@ -18,7 +20,7 @@ export default function UserProfile({user}) {
         tabIndex={0}
         className="mt-3 z-[1] text-start shadow dropdown-content space-y-1 bg-base-100 rounded-box w-48 p-3"
       >
-        <Link to={"/dashboard/myprofile"}>
+        <Link to={"/admin/dashboard"}>
           <li>
             <button className="mt-5 flex mx-auto bg-transparent hover:bg-red-600 text-red-600 font-serif font-semibold hover:text-white py-1 md:py-2 px-2 md:px-4 border hover:border-transparent rounded">
               Dashboard

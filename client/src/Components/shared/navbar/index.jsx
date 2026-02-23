@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import Logo from "../logo/index.jsx";
 import UserProfile from "../user-profile/index.jsx";
 import { menuData } from "../../../data/menu-items/index.jsx";
-import {NavLink} from "react-router-dom";
-
-// JSON data for menu items
-
+import { NavLink } from "react-router-dom";
+import useThemeMode from "../../../hooks/use-theme/index.js";
+import { MdOutlineDarkMode } from "react-icons/md";
+import { BsSun } from "react-icons/bs";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const headerRef = useRef(null);
+  const { changeTheme, mode } = useThemeMode();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,57 +29,73 @@ export default function Navbar() {
 
   // Function to render the menu options including submenus
   const renderMenuOptions = (menuItems, closeDrawer) => {
-    return menuItems.map((item) => (
-      <div key={item.id} className="relative group font-semibold capitalize text-lg">
-        {/* Main NavLink */}
+    return menuItems.map((item, index) => (
+      <>
+
+        <div key={index} className="relative group font-semibold capitalize text-lg">
+          {/* Main NavLink */}
           {
             item?.subMenu ?
-             <div className="flex items-center justify-between font-semibold capitalize text-gray-300 cursor-pointer">{item?.title} ▼ </div> 
-             :
+              <div className="flex items-center justify-start gap-2 cursor-pointer group relative">
+                <a className={`menu-hover  font-semibold capitalize text-lg  ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>
+                  Services
+                </a>
+                <span className={`${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
+                    stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </span>
+              </div>
+
+              :
               <NavLink
+                onClick={() => setDrawerOpen(false)}
                 to={item.href}
-                onClick={closeDrawer} // Close drawer when item is clicked
                 className={({ isActive }) =>
-                  isActive ? "text-rose-600" : "text-gray-300"
+                  isActive ? "text-rose-600" : ""
                 }
               >
                 {item?.title}
               </NavLink>
           }
 
-        {/* Sub-menu dropdown (if any) */}
-        {item.subMenu && (
-          <div className={`absolute ${drawerOpen ? "left-20" : ""} -translate-x-8 left-0 z-10 hidden group-hover:block mt-2 bg-gray-600 shadow-lg rounded p-2 space-y-1  w-44`}>
-            <div className="flex flex-col items-center gap-1 w-full [transition:0.5s]">
-              {item.subMenu.map((subItem, index) => (
-                <NavLink
-                  key={index}
-                  to={subItem.href}
-                  onClick={closeDrawer} // Close drawer when item is clicked
-                  className={({ isActive }) =>
-                    isActive ? "text-rose-600" : "text-gray-300"
-                  }
-                >
-                  {subItem.title}
-                </NavLink>
-              ))}
+          {/* Sub-menu dropdown (if any) */}
+          {item.subMenu && (
+            <div className="absolute group-hover:block mt-6 rounded  dropdown-content z-50 flex  flex-col bg-gray-100  px-4 text-gray-800 shadow-xl transition-all duration-500 ease-in-out max-h-0 overflow-hidden group-hover:max-h-96 w-52">
+              <div className="flex flex-col items-center gap-1 w-full [transition:0.5s] ">
+                {item.subMenu.map((subItem, index) => (
+                  <NavLink
+                    key={index}
+                    onClick={() => setDrawerOpen(false)}
+                    to={subItem.href}
+                    className={({ isActive }) =>
+                      isActive ? "text-rose-600" : "my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2"
+                    }
+                  >
+                    {subItem.title}
+                  </NavLink>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </>
+
+
     ));
   };
 
   return (
     <div
       ref={headerRef}
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? "bg-black/65 shadow-lg bg-opacity-80 backdrop-blur-md" : "bg-transparent"
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? "dark:bg-black/65 bg-white shadow-lg bg-opacity-80 backdrop-blur-md text-black dark:text-white" : "text-white bg-transparent"
         }`}
     >
       <div className="navbar custom-container items-center justify-between md:justify-between md:gap-80 h-20 gap-36">
         {/* Logo */}
         <div className="navbar-start">
-         <Logo />
+          <Logo />
         </div>
 
         {/* Large screen menu */}
@@ -85,6 +103,7 @@ export default function Navbar() {
           <ul className="menu menu-horizontal px-1 space-x-4">
             {renderMenuOptions(menuData, () => { })}
           </ul>
+         
         </div>
 
         <div className="navbar-end">
@@ -100,7 +119,16 @@ export default function Navbar() {
             </button>
           </div>
           {/* User dropdown */}
-          <UserProfile />
+          <div className="flex items-center">
+            <button onClick={changeTheme} className="bg-transparent btn-sm hover:text-blue-500 transition mr-5 flex items-center justify-center">
+              {
+                mode === "dark" ?
+                  <BsSun className="text-black dark:text-white" size={28} /> :
+                  <MdOutlineDarkMode className="text-black dark:text-white" size={28} />
+              }
+            </button>
+            <UserProfile />
+          </div>
         </div>
       </div>
 
@@ -119,7 +147,7 @@ export default function Navbar() {
             </svg>
           </button>
           <ul className="menu p-4 space-y-2">
-            {renderMenuOptions(menuData, () => setDrawerOpen(false))}
+            {renderMenuOptions(menuData)}
           </ul>
         </div>
       </div>

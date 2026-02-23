@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import Swal from 'sweetalert2';
 // import useAxiosPublic from '../../Hook/useAxiosPublic';
 import { useForm } from "react-hook-form";
-import Input from "../../../components/input/index.jsx";
+import Input from '../../../Components/reuseable/input';
 
 export default function SignUp(){
     // const { createUser, updateUserProfile, googleSignIn } = useContext(AuthContext)
@@ -70,6 +70,7 @@ export default function SignUp(){
         <div className="relative w-full h-auto" style={{ backgroundImage: `url('/image/register.jpg')`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
             {/* Overlay */}
             <div className="absolute inset-0 w-full h-full bg-black/60"></div>
+
             {/* Content */}
             <div className='relative z-20 flex justify-center items-center w-full h-auto'>
                 <div className='flex flex-col px-3 md:px-6 py-6 rounded-md bg-gray-700/50 backdrop-blur-md text-gray-300 my-24 w-[95%] md:w-[490px]'>

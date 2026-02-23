@@ -23,7 +23,7 @@ const AccordionMenu = ({
       <button className="accordion-button" onClick={onToggle}>
         {isOpen ? (
           <div className="accordion-button-class">
-            <div className={`accordion-menu ${isOpen && "text-[#419197]"}`}>
+            <div className={`accordion-menu ${isOpen && "text-blue-500"}`}>
             <Icon className="text-xl font-bold" />
               {title}
             </div>
@@ -31,8 +31,8 @@ const AccordionMenu = ({
           </div>
         ) : (
           <div className="accordion-button-class">
-            <div className="accordion-menu">
-            <Icon className="text-xl font-bold" />
+            <div className="accordion-menu text-black dark:text-gray-500">
+            <Icon className="text-xl font-bold " />
               {title}
             </div>
             <MdKeyboardArrowRight className="text-2xl font-bold" />
@@ -45,7 +45,7 @@ const AccordionMenu = ({
         ref={contentRef}
       >
         <div className="accordion-component">
-          <ul className="p-2 accordion-ul ml-3">{children}</ul>
+          <ul className="p-2 accordion-ul mx-3">{children}</ul>
         </div>
       </div>
     </div>

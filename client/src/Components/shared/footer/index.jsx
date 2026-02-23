@@ -41,14 +41,14 @@ export default function Footer(){
     { id: 4,href:"#instagram", icon: <FaInstagram size={18} /> },
   ];
   return (
-    <div className=" text-[#C7C7C7] w-full h-auto mx-h-[387px] pt-24 pb-6">
+    <div className=" text-black dark:text-[#C7C7C7] w-full h-auto mx-h-[387px] pt-24 pb-6">
       <div className=" custom-container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-10">
           <div>
             {/* logo  */}
             <div>
               <Logo />
-              <p className="text-[16px] mt-3">Explore our platform's features and see how we can help boost your productivity with a guided tour.</p>
+              <p className="text-[16px] mt-3 text-black dark:text-[#C7C7C7]">Explore our platform&apos;s features and see how we can help boost your productivity with a guided tour.</p>
             </div>
             <div className="flex gap-5 mt-14">
               {iconsData?.map((item) => {
@@ -56,7 +56,7 @@ export default function Footer(){
                   <Link
                   to={item?.href}
                     key={item?.id}
-                    className="w-8 h-8 p-2 border border-rose-600 hover:bg-rose-600 text-white [transition:0.5s] rounded-full flex items-center justify-center"
+                    className="w-8 h-8 p-2 border border-rose-600 hover:bg-rose-600 dark:text-white hover:text-white [transition:0.5s] rounded-full flex items-center justify-center"
                   >
                     <span>{item?.icon}</span>
                   </Link>
@@ -68,7 +68,7 @@ export default function Footer(){
          {
           footerData?.map((item,index)=> (
             <div key={index}>
-            <h3 className="text-[1.5rem] font-semibold uppercase text-white mb-5">
+            <h3 className="text-[1.5rem] font-semibold uppercase text-black dark:text-white mb-5">
               {item?.title}
             </h3>
             <div className="flex flex-col gap-3">
@@ -92,11 +92,11 @@ export default function Footer(){
         </div>
         <div className="mt-10">
           <div className="w-full rounded-full h-[1px] bg-gray-500" ></div>
-          <p className="text-[14px] text-center pt-6">
+          <p className="text-[14px] text-center pt-6 text-gray-800 dark:text-gray-400">
             Tour. 2024. All rights reserved.
           </p>
         </div>
       </div>
     </div>
   );
-};
+}

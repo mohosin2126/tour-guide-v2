@@ -8,7 +8,7 @@
     @apply transition-all duration-200 ease-out overflow-hidden
 }
 .accordion-component{
-    @apply mt-2  relative w-[180px] border-rose-500 ml-5
+    @apply mt-2  relative  border-rose-500 ml-5
 }
 .accordion-menu{
     @apply flex items-center justify-center gap-2 active:text-rose-500

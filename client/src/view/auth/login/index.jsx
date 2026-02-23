@@ -3,8 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import useApi from "../../../hooks/auth/useApi.js";
-import Input from "../../../components/input/index.jsx";
-
+import Input from '../../../Components/reuseable/input/index.jsx';
 
 
 export default function Login() {

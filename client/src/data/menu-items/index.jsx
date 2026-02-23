@@ -3,13 +3,10 @@ import { MdReport, MdSentimentSatisfied, MdSettings, MdSupport } from "react-ico
 
 
 
-
-
-
-
 // for home page navbar 
 const menuData = [
     { id: 1, title: "Home", href: "/" },
+    { id: 1, title: "About Us", href: "/about-us" },
     { id: 2, title: "Community", href: "/community" },
     { id: 3, title: "Blogs", href: "/blogs" },
     {
@@ -18,9 +15,13 @@ const menuData = [
       subMenu: [
         { title: "Content 1", href: "/services/content1" },
         { title: "Content 2", href: "/services/content2" },
+        { title: "Content 3", href: "/services/content3" },
+        { title: "Content 4", href: "/services/content4" },
+        { title: "Content 5", href: "/services/content5" },
+        { title: "Content 6", href: "/services/content6" },
       ],
     },
-    { id: 5, title: "Contact Us", href: "/contact" },
+    { id: 5, title: "Contact Us", href: "/contact-us" },
   ];
 
 
@@ -68,20 +69,20 @@ const dashboardData = [
       title: "Settings", 
       href: "/admin/settings", 
       icon: MdSettings, 
-      subMenu: [
-        { 
-          title: "Profile Settings", 
-          href: "/admin/settings/profile", 
-        },
-        { 
-          title: "Security", 
-          href: "/admin/settings/security", 
-        },
-        { 
-          title: "Notifications", 
-          href: "/admin/settings/notifications", 
-        },
-      ],
+      // subMenu: [
+      //   { 
+      //     title: "Profile Settings", 
+      //     href: "/admin/settings/profile", 
+      //   },
+      //   { 
+      //     title: "Security", 
+      //     href: "/admin/settings/security", 
+      //   },
+      //   { 
+      //     title: "Notifications", 
+      //     href: "/admin/settings/notifications", 
+      //   },
+      // ],
     },
     { 
       id: 5, 
@@ -91,9 +92,30 @@ const dashboardData = [
     },
   ];
   
+  const settingsData = [
+    {
+      id: 1,
+      title: "Profile Settings",
+      href: "/admin/settings/profile",
+      icon: MdSentimentSatisfied  
+    },
+    {
+      id: 2,
+      title: "Security",
+      href: "/admin/settings/security",
+      icon: MdSentimentSatisfied  
+    },
+    {
+      id: 3,
+      title: "Notifications",
+      href: "/admin/settings/notifications",
+      icon: MdSentimentSatisfied  
+    },
+
+  ]
   
   
   // Export the all data
-  export { menuData,dashboardData };
+  export { menuData,dashboardData,settingsData };
   
 

@@ -1,13 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Seaweed+Script&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
 .custom-container {
     @apply container mx-auto px-3 md:px-4 lg:px-10;
 }
-.common-flex{
+
+.common-flex {
     @apply flex items-center justify-center w-full
 }
-.menu-link{
+
+.menu-link {
     @apply flex items-start justify-start gap-1 text-[14px] font-medium px-3 py-2 w-full rounded-md
 }
+
+
+.seaweed-script {
+    font-family: "Seaweed Script", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* for animation  */
+
+@keyframes jump {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px); 
+    }
+    100% {
+      transform: translateY(0); 
+    }
+  }
+  
+  .animated-box {
+    animation: jump 4s infinite linear;
+  }
+  
+  @keyframes triangle {
+    0% {
+        transform: translate(0, 0); 
+      }
+      33% {
+        transform: translate(0, 120px); 
+      }
+      66% {
+        transform: translate(-120px, 120px); 
+      }
+      100% {
+        transform: translate(0, 0); 
+      }
+  }
+  
+  .moving-box {
+    animation: triangle 4s linear infinite;
+  }
+  
+
+  /* for shooting border  */
+  /* ShootingBorderComponent.css */
+.shooting-border {
+  position: relative;
+  padding: 16px;
+}
+
+.shooting-border::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #3b82f6; /* Tailwind's blue-500 */
+  animation: shoot 1s forwards;
+}
+
+@keyframes shoot {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+
+/* Shimmer background animation */
+.shimmer-button .animate-shimmer {
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 300%;
+  height: 100%;
+  animation: shimmer 2.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150%);
+  }
+  100% {
+    transform: translateX(150%);
+  }
+}
+
