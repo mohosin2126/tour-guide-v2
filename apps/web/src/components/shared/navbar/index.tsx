@@ -3,10 +3,11 @@ import Logo from "@/components/shared/logo";
 import UserProfile from "@/components/shared/user-profile";
 import { menuData } from "@/data/menu-items";
 import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { MenuItem } from "@/types";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 
 const darkHeroPages = ["/", "/about-us", "/contact-us", "/packages", "/guides", "/community"];
@@ -17,6 +18,7 @@ export default function Navbar() {
   const [mobileSubmenu, setMobileSubmenu] = useState<number | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
   const hasDarkHero = darkHeroPages.includes(location.pathname);
  
   const useWhiteText = !isScrolled && hasDarkHero;
@@ -42,6 +44,13 @@ export default function Navbar() {
     setDrawerOpen(false);
     setMobileSubmenu(null);
   };
+
+  const dashboardPath =
+    user?.role === "admin"
+      ? "/admin/overview"
+      : user?.role === "guide"
+        ? "/guide/overview"
+        : "/user/overview";
 
   const renderDesktopItem = (item: MenuItem) => {
     if (item.subMenu) {
@@ -232,6 +241,70 @@ export default function Navbar() {
                 )}
               </div>
             ))}
+          </div>
+
+          <div className="mt-4 border-t pt-4">
+            {isAuthenticated ? (
+              <div className="flex flex-col gap-1">
+                <NavLink
+                  to={dashboardPath}
+                  onClick={closeDrawer}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-accent"
+                    )
+                  }
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    closeDrawer();
+                  }}
+                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-left text-sm font-semibold text-destructive transition-colors hover:bg-accent"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <NavLink
+                  to="/auth/login"
+                  onClick={closeDrawer}
+                  className={({ isActive }) =>
+                    cn(
+                      "block rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-accent"
+                    )
+                  }
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/auth/register"
+                  onClick={closeDrawer}
+                  className={({ isActive }) =>
+                    cn(
+                      "block rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-accent"
+                    )
+                  }
+                >
+                  Sign Up
+                </NavLink>
+              </div>
+            )}
           </div>
         </nav>
       </aside>
