@@ -2,7 +2,7 @@ import SubscribeForm from "./subscribe-form";
 
 export default function Subscribe() {
   return (
-    <div className="relative top-14 mx-auto w-10/12 rounded-lg bg-amber-600 p-3 sm:p-10">
+    <div className="relative 4 bottom-4 mx-auto w-10/12 rounded-lg bg-amber-600 p-3 sm:p-10">
       <div className="flex flex-col items-center justify-between gap-10 lg:flex-row">
         <div className="z-10 flex-1">
           <h1 className="text-[2.5rem] font-bold text-white">
