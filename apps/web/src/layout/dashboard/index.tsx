@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Menu, Sun, Moon, X, LogOut, ChevronRight, Home, Bell } from "lucide-react";
 import {
@@ -35,6 +35,12 @@ export default function DashboardLayout() {
   const { changeTheme, mode } = useTheme();
   const { user, logout } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    const html = document.documentElement;
+    html.classList.remove("light", "dark");
+    html.classList.add(mode);
+  }, [mode]);
 
   const menuItems =
     user?.role === "admin"

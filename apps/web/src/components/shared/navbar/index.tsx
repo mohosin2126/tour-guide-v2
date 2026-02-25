@@ -3,8 +3,7 @@ import Logo from "@/components/shared/logo";
 import UserProfile from "@/components/shared/user-profile";
 import { menuData } from "@/data/menu-items";
 import { NavLink, useLocation } from "react-router-dom";
-import { useTheme } from "@/context/theme-context";
-import { Sun, Moon, Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { MenuItem } from "@/types";
@@ -17,7 +16,6 @@ export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mobileSubmenu, setMobileSubmenu] = useState<number | null>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const { changeTheme, mode } = useTheme();
   const location = useLocation();
   const hasDarkHero = darkHeroPages.includes(location.pathname);
  
@@ -130,35 +128,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-1.5">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={changeTheme}
-              className={cn(
-                "relative h-9 w-9 rounded-full transition-all duration-300",
-                isScrolled || !useWhiteText
-                  ? "hover:bg-accent"
-                  : "text-white hover:bg-white/10 hover:text-white"
-              )}
-            >
-              <Sun
-                className={cn(
-                  "absolute h-5 w-5 transition-all duration-300",
-                  mode === "dark"
-                    ? "rotate-0 scale-100"
-                    : "rotate-90 scale-0"
-                )}
-              />
-              <Moon
-                className={cn(
-                  "absolute h-5 w-5 transition-all duration-300",
-                  mode === "dark"
-                    ? "-rotate-90 scale-0"
-                    : "rotate-0 scale-100"
-                )}
-              />
-            </Button>
-
             <UserProfile isScrolled={isScrolled && !useWhiteText} />
 
             <Button
