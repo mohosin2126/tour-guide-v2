@@ -4,9 +4,12 @@ import { useAuth } from "@/hooks/auth/use-auth";
 import { useGuidePackages } from "@/hooks/api/use-packages";
 import { useGuideBookings } from "@/hooks/api/use-bookings";
 import { useGuideReviews } from "@/hooks/api/use-reviews";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import StatCard from "@/components/shared/stat-card";
+import DataTable, { type Column } from "@/components/shared/data-table";
+import EmptyState from "@/components/shared/empty-state";
 
 interface BookingRecord {
   _id: string;
@@ -21,6 +24,13 @@ interface ReviewRecord {
   _id: string;
   rating: number;
 }
+
+const statusVariant: Record<string, "success" | "pending" | "destructive" | "info"> = {
+  confirmed: "success",
+  pending: "pending",
+  cancelled: "destructive",
+  completed: "info",
+};
 
 export default function GuideOverview() {
   const { user } = useAuth();
@@ -40,53 +50,66 @@ export default function GuideOverview() {
       ?.filter((b) => b.status === "confirmed" || b.status === "completed")
       .reduce((sum, b) => sum + (b.totalPrice || 0), 0) || 0;
 
-  const stats = [
-    { title: "My Packages", value: (packages as unknown[])?.length || 0, icon: Package, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-950" },
-    { title: "Bookings", value: bookings?.length || 0, icon: BookOpen, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950" },
-    { title: "Avg Rating", value: avgRating, icon: Star, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-950" },
-    { title: "Earnings", value: `$${totalEarnings}`, icon: TrendingUp, color: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-950" },
-  ];
-
   const quickActions = [
     { title: "Create Package", href: "/guide/packages", icon: PlusCircle, desc: "Add a new tour" },
     { title: "View Analytics", href: "/guide/analytics", icon: BarChart3, desc: "Track performance" },
     { title: "Manage Reviews", href: "/guide/reviews", icon: Star, desc: "See traveler feedback" },
   ];
 
+  const recentColumns: Column<BookingRecord>[] = [
+    {
+      key: "traveler",
+      header: "Traveler",
+      render: (row) => <span className="font-medium">{row.user?.name || "Traveler"}</span>,
+    },
+    {
+      key: "package",
+      header: "Package",
+      render: (row) => <span className="text-muted-foreground">{row.package?.title || "—"}</span>,
+    },
+    {
+      key: "date",
+      header: "Date",
+      render: (row) => (
+        <span className="text-muted-foreground">
+          {row.date ? new Date(row.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "text-right",
+      render: (row) => (
+        <Badge variant={statusVariant[row.status] || "secondary"} size="sm" className="capitalize">
+          {row.status}
+        </Badge>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <Card className="border-none bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent">
-        <CardContent className="flex items-center gap-4 p-6">
-          <Avatar className="h-14 w-14">
+      <div className="rounded-xl bg-gradient-to-br from-emerald-600 to-teal-500 p-6 text-white">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14 border-2 border-white/30">
             <AvatarImage src={user?.photo} />
-            <AvatarFallback className="text-lg">{user?.name?.[0]}</AvatarFallback>
+            <AvatarFallback className="bg-white/20 text-lg text-white">{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">Guide Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back, {user?.name?.split(" ")[0]}!</p>
+            <p className="text-emerald-100">Welcome back, {user?.name?.split(" ")[0]}!</p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title} className="transition-all hover:shadow-md">
-              <CardContent className="flex items-center gap-4 p-6">
-                <div className={`rounded-lg p-3 ${stat.bg}`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        <StatCard title="My Packages" value={(packages as unknown[])?.length || 0} icon={Package} color="blue" />
+        <StatCard title="Bookings" value={bookings?.length || 0} icon={BookOpen} color="emerald" />
+        <StatCard title="Avg Rating" value={avgRating} icon={Star} color="amber" />
+        <StatCard title="Earnings" value={`$${totalEarnings.toLocaleString()}`} icon={TrendingUp} color="violet" />
       </div>
 
       {/* Quick Actions */}
@@ -95,70 +118,52 @@ export default function GuideOverview() {
         <div className="grid gap-3 sm:grid-cols-3">
           {quickActions.map((action) => (
             <Link key={action.title} to={action.href}>
-              <Card className="group cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
-                <CardContent className="flex items-center gap-3 p-4">
-                  <div className="rounded-lg bg-primary/10 p-2">
-                    <action.icon size={20} className="text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium group-hover:text-primary">{action.title}</p>
-                    <p className="text-xs text-muted-foreground">{action.desc}</p>
-                  </div>
-                  <ArrowRight size={16} className="text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
-                </CardContent>
-              </Card>
+              <div className="group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md">
+                <div className="rounded-lg bg-primary/10 p-2.5">
+                  <action.icon size={20} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium group-hover:text-primary">{action.title}</p>
+                  <p className="text-xs text-muted-foreground">{action.desc}</p>
+                </div>
+                <ArrowRight size={16} className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </div>
             </Link>
           ))}
         </div>
       </div>
 
       {/* Recent Bookings */}
-      {bookings && bookings.length > 0 ? (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Recent Bookings</CardTitle>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Recent Bookings</h2>
+          {bookings && bookings.length > 0 && (
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/guide/bookings">View All <ArrowRight size={14} className="ml-1" /></Link>
+              <Link to="/guide/bookings">
+                View All <ArrowRight size={14} className="ml-1" />
+              </Link>
             </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {bookings.slice(0, 5).map((booking) => (
-                <div key={booking._id} className="flex items-center justify-between rounded-lg border p-3">
-                  <div>
-                    <p className="font-medium">{booking.user?.name || "Traveler"}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {booking.package?.title} · {new Date(booking.date || "").toLocaleDateString()}
-                    </p>
-                  </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      booking.status === "confirmed"
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                        : booking.status === "cancelled"
-                          ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                          : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
-                    }`}
-                  >
-                    {booking.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <BookOpen className="mb-4 h-12 w-12 text-muted-foreground/40" />
-            <h3 className="font-semibold">No bookings yet</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Create your first tour package to start receiving bookings!</p>
-            <Button className="mt-4" asChild>
-              <Link to="/guide/packages">Create Package</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </div>
+        <DataTable
+          columns={recentColumns}
+          data={(bookings || []).slice(0, 5)}
+          keyExtractor={(row) => row._id}
+          compact
+          emptyState={
+            <EmptyState
+              icon={BookOpen}
+              title="No bookings yet"
+              description="Create your first tour package to start receiving bookings!"
+              action={
+                <Button asChild size="sm">
+                  <Link to="/guide/packages">Create Package</Link>
+                </Button>
+              }
+            />
+          }
+        />
+      </div>
     </div>
   );
 }

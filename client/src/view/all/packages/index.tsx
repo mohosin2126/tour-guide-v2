@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageLoader, CardSkeleton } from "@/components/ui/loading";
+import PageHero from "@/components/shared/page-hero";
 import Subscribe from "@/view/all/home/subscribe";
 
 export default function PackagesPage() {
@@ -38,14 +39,16 @@ export default function PackagesPage() {
   const totalPages = ((data as Record<string, unknown>)?.totalPages as number) || 1;
 
   return (
-    <div className="min-h-screen pb-16 pt-24">
-      <div className="custom-container">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Tour Packages</h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Discover amazing destinations and create unforgettable memories
-          </p>
-        </div>
+    <div className="min-h-screen pb-16">
+      <PageHero
+        title="Tour Packages"
+        subtitle="Discover amazing destinations and create unforgettable memories"
+        backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
+        height="short"
+        breadcrumbs={[{ label: "Packages" }]}
+      />
+
+      <div className="custom-container pt-10">
 
         <div className="mb-8 flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">

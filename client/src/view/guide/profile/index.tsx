@@ -1,13 +1,13 @@
 import { useState, FormEvent, ChangeEvent } from "react";
+import { Camera, Save, MapPin, Tag } from "lucide-react";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { api } from "@/hooks/auth/use-api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 export default function GuideProfile() {
   const { user, updateUser } = useAuth();
@@ -47,33 +47,50 @@ export default function GuideProfile() {
 
   const initials = user?.name?.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) || "G";
 
+  const specialtiesArr = formData.specialties.split(",").map((s) => s.trim()).filter(Boolean);
+
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Guide Profile</h1>
         <p className="text-muted-foreground">Manage your guide profile and information</p>
       </div>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+
+      <div className="rounded-xl border bg-card">
+        {/* Profile Header */}
+        <div className="flex items-center gap-5 border-b p-6">
+          <div className="group relative">
+            <Avatar className="h-20 w-20 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
               <AvatarImage src={user?.photo} />
-              <AvatarFallback className="text-xl">{initials}</AvatarFallback>
+              <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
             </Avatar>
-            <div>
-              <p className="text-lg font-semibold">{user?.name}</p>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+              <Camera size={20} className="text-white" />
             </div>
           </div>
-        </CardHeader>
-        <Separator />
-        <CardContent className="pt-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {success && (
-              <div className="rounded-md bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                {success}
-              </div>
-            )}
+          <div>
+            <p className="text-lg font-semibold">{user?.name}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <Badge variant="active" size="sm">Guide</Badge>
+              {formData.location && (
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <MapPin size={12} /> {formData.location}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6">
+          {success && (
+            <div className="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+              {success}
+            </div>
+          )}
+
+          <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input id="name" name="name" value={formData.name} onChange={handleChange} />
@@ -82,34 +99,53 @@ export default function GuideProfile() {
               <Label htmlFor="email">Email</Label>
               <Input id="email" value={user?.email} disabled className="bg-muted" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" name="phone" value={formData.phone} onChange={handleChange} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input id="location" name="location" value={formData.location} onChange={handleChange} />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input id="phone" name="phone" value={formData.phone} onChange={handleChange} />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="location">
+                <span className="flex items-center gap-1"><MapPin size={13} /> Location</span>
+              </Label>
+              <Input id="location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g., Kathmandu, Nepal" />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="photo">Photo URL</Label>
               <Input id="photo" name="photo" value={formData.photo} onChange={handleChange} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="bio">Bio</Label>
-              <Textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} rows={4} />
+              <Textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} rows={4} placeholder="Tell travelers about yourself..." />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="specialties">Specialties (comma-separated)</Label>
-              <Input id="specialties" name="specialties" value={formData.specialties} onChange={handleChange} placeholder="Hiking, Cultural Tours, Beach" />
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="specialties">
+                <span className="flex items-center gap-1"><Tag size={13} /> Specialties (comma-separated)</span>
+              </Label>
+              <Input
+                id="specialties"
+                name="specialties"
+                value={formData.specialties}
+                onChange={handleChange}
+                placeholder="Hiking, Cultural Tours, Beach"
+              />
+              {specialtiesArr.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {specialtiesArr.map((s) => (
+                    <Badge key={s} variant="secondary" size="sm">{s}</Badge>
+                  ))}
+                </div>
+              )}
             </div>
-            <Button type="submit" disabled={loading}>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <Button type="submit" disabled={loading} className="gap-2">
+              <Save size={16} />
               {loading ? "Saving..." : "Save Changes"}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

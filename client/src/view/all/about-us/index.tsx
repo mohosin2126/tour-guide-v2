@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Users, Globe, Award, Shield, Heart, MapPin, Star, Headphones } from "lucide-react";
 import AnimatedButton from "@/components/ui/animated-button";
 import { Card, CardContent } from "@/components/ui/card";
+import PageHero from "@/components/shared/page-hero";
 
 const stats = [
   { number: "10K+", label: "Happy Travelers", icon: Users },
@@ -43,21 +44,13 @@ const team = [
 export default function AboutUsPage() {
   return (
     <div>
-      {/* Hero */}
-      <div className="relative flex h-[50vh] min-h-[400px] items-center justify-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600')" }}
-        >
-          <div className="absolute inset-0 bg-black/60" />
-        </div>
-        <div className="relative z-10 text-center text-white">
-          <h1 className="text-4xl font-bold md:text-5xl">About Us</h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
-            Making travel experiences extraordinary since 2018
-          </p>
-        </div>
-      </div>
+      <PageHero
+        title="About Us"
+        subtitle="Making travel experiences extraordinary since 2018"
+        backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
+        height="short"
+        breadcrumbs={[{ label: "About Us" }]}
+      />
 
       <div className="custom-container">
         {/* Mission */}

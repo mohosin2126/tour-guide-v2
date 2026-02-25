@@ -1,9 +1,12 @@
-import { Calendar, CheckCircle, XCircle } from "lucide-react";
+import { useState } from "react";
+import { Calendar, Check, X } from "lucide-react";
 import { useGuideBookings, useUpdateBookingStatus } from "@/hooks/api/use-bookings";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageLoader } from "@/components/ui/loading";
+import DataTable, { type Column } from "@/components/shared/data-table";
+import EmptyState from "@/components/shared/empty-state";
+import ConfirmDialog from "@/components/shared/confirm-dialog";
 
 interface BookingRecord {
   _id: string;
@@ -15,16 +18,84 @@ interface BookingRecord {
   package?: { title?: string };
 }
 
-const statusStyles: Record<string, string> = {
-  pending: "warning",
+const statusVariant: Record<string, "success" | "warning" | "destructive" | "info" | "pending"> = {
+  pending: "pending",
   confirmed: "success",
   cancelled: "destructive",
-  completed: "default",
+  completed: "info",
 };
 
 export default function GuideBookings() {
   const { data: bookings, isLoading } = useGuideBookings() as { data: BookingRecord[] | undefined; isLoading: boolean };
   const updateStatus = useUpdateBookingStatus();
+  const [confirmAction, setConfirmAction] = useState<{ id: string; action: "confirmed" | "cancelled" } | null>(null);
+
+  const columns: Column<BookingRecord>[] = [
+    {
+      key: "package",
+      header: "Package",
+      render: (row) => (
+        <div>
+          <p className="font-semibold">{row.package?.title || "Tour Package"}</p>
+          <p className="text-xs text-muted-foreground">by {row.user?.name || "Traveler"}</p>
+        </div>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      render: (row) => (
+        <span className="text-muted-foreground">
+          {row.date ? new Date(row.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "guests",
+      header: "Guests",
+      render: (row) => <span>{row.guests || 1}</span>,
+    },
+    {
+      key: "price",
+      header: "Amount",
+      render: (row) => <span className="font-semibold">${row.totalPrice?.toLocaleString() || 0}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (row) => (
+        <Badge variant={statusVariant[row.status] || "secondary"} className="capitalize">
+          {row.status}
+        </Badge>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (row) =>
+        row.status === "pending" ? (
+          <div className="flex items-center justify-end gap-1">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-900/30"
+              onClick={(e) => { e.stopPropagation(); setConfirmAction({ id: row._id, action: "confirmed" }); }}
+            >
+              <Check size={16} />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
+              onClick={(e) => { e.stopPropagation(); setConfirmAction({ id: row._id, action: "cancelled" }); }}
+            >
+              <X size={16} />
+            </Button>
+          </div>
+        ) : null,
+    },
+  ];
 
   if (isLoading) return <PageLoader />;
 
@@ -32,48 +103,43 @@ export default function GuideBookings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Bookings</h1>
-        <p className="text-muted-foreground">Manage incoming tour bookings</p>
+        <p className="text-muted-foreground">
+          Manage your {bookings?.length || 0} incoming tour bookings
+        </p>
       </div>
-      {!bookings?.length ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-          <Calendar className="mb-4 h-16 w-16 text-muted-foreground/50" />
-          <h3 className="text-lg font-semibold">No bookings yet</h3>
-          <p className="text-muted-foreground">Bookings will appear here once travelers book your packages</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {bookings.map((booking) => (
-            <Card key={booking._id}>
-              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h3 className="font-semibold">{booking.package?.title || "Tour Package"}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Booked by <span className="font-medium text-foreground">{booking.user?.name}</span>
-                  </p>
-                  <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span>{new Date(booking.date || "").toLocaleDateString()}</span>
-                    <span>{booking.guests} guest(s)</span>
-                    <span className="font-medium">${booking.totalPrice}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant={statusStyles[booking.status] as "default" | "destructive" | "outline" | "secondary" | undefined || "default"}>{booking.status}</Badge>
-                  {booking.status === "pending" && (
-                    <>
-                      <Button size="sm" variant="outline" className="text-emerald-600" disabled={updateStatus.isPending} onClick={() => updateStatus.mutate({ id: booking._id, status: "confirmed" })}>
-                        <CheckCircle size={14} className="mr-1" />Confirm
-                      </Button>
-                      <Button size="sm" variant="destructive" disabled={updateStatus.isPending} onClick={() => updateStatus.mutate({ id: booking._id, status: "cancelled" })}>
-                        <XCircle size={14} className="mr-1" />Decline
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+
+      <DataTable
+        columns={columns}
+        data={bookings || []}
+        keyExtractor={(row) => row._id}
+        emptyState={
+          <EmptyState
+            icon={Calendar}
+            title="No bookings yet"
+            description="Bookings will appear here once travelers book your packages."
+          />
+        }
+      />
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={() => setConfirmAction(null)}
+        title={confirmAction?.action === "confirmed" ? "Confirm Booking" : "Decline Booking"}
+        description={
+          confirmAction?.action === "confirmed"
+            ? "Are you sure you want to confirm this booking? The traveler will be notified."
+            : "Are you sure you want to decline this booking? This action cannot be undone."
+        }
+        confirmText={confirmAction?.action === "confirmed" ? "Confirm" : "Decline"}
+        variant={confirmAction?.action === "cancelled" ? "destructive" : "default"}
+        onConfirm={() => {
+          if (confirmAction) {
+            updateStatus.mutate({ id: confirmAction.id, status: confirmAction.action });
+          }
+          setConfirmAction(null);
+        }}
+        loading={updateStatus.isPending}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import ReactStars from "react-rating-stars-component";
-import { BiSolidQuoteAltRight } from "react-icons/bi";
+import { Star, Quote } from "lucide-react";
 import Title from "@/components/reuseable/title";
 import { useLatestReviews } from "@/hooks/api/use-reviews";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const fallbackTestimonials = [
   {
@@ -13,7 +13,7 @@ const fallbackTestimonials = [
   {
     _id: "2",
     user: { name: "James Wilson", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400" },
-    rating: 4.5,
+    rating: 5,
     comment: "The mountain trek was breathtaking. Everything was well organized and our guide made the trip truly memorable.",
   },
   {
@@ -28,10 +28,36 @@ const fallbackTestimonials = [
     rating: 4,
     comment: "Great cultural experience with an amazing guide. Learned so much about the local history and traditions.",
   },
+  {
+    _id: "5",
+    user: { name: "Priya Patel", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400" },
+    rating: 5,
+    comment: "From start to finish, everything was seamless. The guide was passionate and made the whole group feel welcome and excited.",
+  },
+  {
+    _id: "6",
+    user: { name: "Marcus Brown", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400" },
+    rating: 5,
+    comment: "I've traveled with many companies, but this was by far the best. Authentic experiences you simply can't get on your own.",
+  },
 ];
 
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          size={16}
+          className={i < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Testimonials() {
-  const { data: reviews } = useLatestReviews(4);
+  const { data: reviews } = useLatestReviews(6);
 
   const displayReviews = reviews?.length > 0
     ? reviews.map((r: Record<string, unknown>) => ({
@@ -45,36 +71,33 @@ export default function Testimonials() {
   return (
     <div className="my-20">
       <Title title="Testimonials" subTitle="Love from our Clients" className="text-center" />
-      <div className="mx-auto grid w-full grid-cols-1 gap-8 pt-16 md:grid-cols-2 lg:w-11/12 lg:grid-cols-4">
-        {displayReviews.map((testimonial: Record<string, unknown>) => (
-          <div key={testimonial._id as string} className="relative pt-10">
-            <div className="group relative rounded-md border bg-card from-amber-600 p-8 text-card-foreground [transition:0.5s] ease-in-out hover:bg-gradient-to-b dark:border-none">
-              <div className="absolute -top-14 left-1/2 z-10 -translate-x-1/2 transform">
-                <img
-                  src={(testimonial.user as Record<string, string>)?.photo || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400"}
-                  alt="profile-image"
-                  className="h-20 w-20 rounded-full border-4 border-white object-cover shadow-lg group-hover:border-amber-400"
-                />
+      <div className="mx-auto grid w-full grid-cols-1 gap-6 pt-10 md:grid-cols-2 lg:w-11/12 lg:grid-cols-3">
+        {displayReviews.map((testimonial: Record<string, unknown>) => {
+          const user = testimonial.user as Record<string, string>;
+          const initials = user?.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) || "U";
+          return (
+            <div
+              key={testimonial._id as string}
+              className="group relative rounded-2xl border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <Quote size={32} className="absolute right-5 top-5 text-primary/10 transition-colors group-hover:text-primary/20" />
+              <div className="mb-4 flex items-center gap-3">
+                <Avatar className="h-12 w-12 ring-2 ring-primary/10 ring-offset-2 ring-offset-background">
+                  <AvatarImage src={user?.photo} />
+                  <AvatarFallback className="text-sm font-medium">{initials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold text-foreground">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground">Traveler</p>
+                </div>
               </div>
-              <div className="absolute bottom-3 right-5 text-gray-200 dark:text-gray-700">
-                <BiSolidQuoteAltRight size={80} />
-              </div>
-              <p className="mb-7 mt-3 line-clamp-4 text-center text-muted-foreground">{testimonial.comment as string}</p>
-              <div className="flex flex-col items-center justify-center text-center">
-                <h1 className="mb-2 text-xl font-bold text-foreground">{(testimonial.user as Record<string, string>)?.name}</h1>
-                <p className="text-base font-semibold text-gray-500">Traveler</p>
-                <ReactStars
-                  count={5}
-                  value={testimonial.rating as number}
-                  size={28}
-                  edit={false}
-                  isHalf={true}
-                  activeColor="#ff6b00"
-                />
-              </div>
+              <StarRating rating={testimonial.rating as number} />
+              <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-muted-foreground">
+                {testimonial.comment as string}
+              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

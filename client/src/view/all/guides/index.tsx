@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { PageLoader } from "@/components/ui/loading";
 import { AnimatedButton } from "@/components/ui/animated-button";
+import PageHero from "@/components/shared/page-hero";
 
 export default function GuidesPage() {
   const { data: guides, isLoading } = useGuides();
@@ -15,15 +16,13 @@ export default function GuidesPage() {
   return (
     <div className="min-h-screen pb-16">
       {/* Hero Section */}
-      <div className="relative flex h-[50vh] items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1200)" }}>
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
-          <h1 className="text-5xl font-bold tracking-tight">Meet Our Expert Guides</h1>
-          <p className="mt-4 text-lg text-white/80">
-            Passionate locals with deep knowledge and years of experience making your trips extraordinary
-          </p>
-        </div>
-      </div>
+      <PageHero
+        title="Meet Our Expert Guides"
+        subtitle="Passionate locals with deep knowledge and years of experience making your trips extraordinary"
+        backgroundImage="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1200"
+        height="short"
+        breadcrumbs={[{ label: "Guides" }]}
+      />
 
       <div className="custom-container pt-12">
         {!guides?.length ? (

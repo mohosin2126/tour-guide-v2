@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import type { MenuItem } from "@/types";
 
 // Pages with dark hero backgrounds where white text is fine
-const darkHeroPages = ["/", "/about-us", "/contact-us"];
+const darkHeroPages = ["/", "/about-us", "/contact-us", "/packages", "/guides", "/community"];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);

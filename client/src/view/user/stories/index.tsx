@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { PenSquare, Trash2, FileText } from "lucide-react";
+import { PenSquare, Trash2, FileText, Heart } from "lucide-react";
 import { useUserStories, useCreateStory, useDeleteStory } from "@/hooks/api/use-stories";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,9 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import DataTable, { type Column } from "@/components/shared/data-table";
+import EmptyState from "@/components/shared/empty-state";
+import ConfirmDialog from "@/components/shared/confirm-dialog";
 
 interface StoryRecord {
   _id: string;
@@ -31,6 +34,7 @@ export default function UserStories() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<StoryRecord | null>(null);
 
   const handleCreate = () => {
     createMutation.mutate(
@@ -46,46 +50,97 @@ export default function UserStories() {
     );
   };
 
+  const columns: Column<StoryRecord>[] = [
+    {
+      key: "title",
+      header: "Story",
+      render: (row) => (
+        <div className="min-w-0">
+          <p className="font-semibold truncate">{row.title || "Untitled"}</p>
+          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{row.content}</p>
+        </div>
+      ),
+    },
+    {
+      key: "likes",
+      header: "Likes",
+      render: (row) => (
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Heart size={14} className={row.likes?.length ? "fill-rose-500 text-rose-500" : ""} />
+          <span className="text-sm">{row.likes?.length || 0}</span>
+        </div>
+      ),
+    },
+    {
+      key: "date",
+      header: "Published",
+      render: (row) => (
+        <span className="text-sm text-muted-foreground">
+          {row.createdAt
+            ? new Date(row.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (row) => (
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); }}
+        >
+          <Trash2 size={15} />
+        </Button>
+      ),
+    },
+  ];
+
   if (isLoading) return <PageLoader />;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Stories</h1>
+          <h1 className="text-2xl font-bold">
+            My Stories
+            {stories?.length ? (
+              <Badge variant="secondary" className="ml-3 align-middle text-xs font-normal">
+                {stories.length}
+              </Badge>
+            ) : null}
+          </h1>
           <p className="text-muted-foreground">Share your travel experiences</p>
         </div>
         <Button onClick={() => setDialogOpen(true)}>
-          <PenSquare size={18} className="mr-2" />New Story
+          <PenSquare size={18} className="mr-2" />
+          New Story
         </Button>
       </div>
-      {!stories?.length ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-          <FileText className="mb-4 h-16 w-16 text-muted-foreground/50" />
-          <h3 className="text-lg font-semibold">No stories yet</h3>
-          <p className="text-muted-foreground">Write about your travel experiences</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {stories.map((story) => (
-            <Card key={story._id}>
-              <CardContent className="flex items-start justify-between p-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold">{story.title}</h3>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{story.content}</p>
-                  <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>{new Date(story.createdAt || "").toLocaleDateString()}</span>
-                    <span>{story.likes?.length || 0} likes</span>
-                  </div>
-                </div>
-                <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => deleteMutation.mutate(story._id)} disabled={deleteMutation.isPending}>
-                  <Trash2 size={16} />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+
+      <DataTable
+        columns={columns}
+        data={stories || []}
+        keyExtractor={(row) => row._id}
+        emptyState={
+          <EmptyState
+            icon={FileText}
+            title="No stories yet"
+            description="Write about your travel experiences and share with the community."
+            action={
+              <Button size="sm" onClick={() => setDialogOpen(true)}>
+                <PenSquare size={16} className="mr-2" />
+                Write Your First Story
+              </Button>
+            }
+          />
+        }
+      />
+
+      {/* Create Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -106,13 +161,30 @@ export default function UserStories() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Cancel
+            </Button>
             <Button onClick={handleCreate} disabled={!title.trim() || !content.trim() || createMutation.isPending}>
               {createMutation.isPending ? "Publishing..." : "Publish"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={() => setDeleteTarget(null)}
+        title="Delete Story"
+        description={`Are you sure you want to delete "${deleteTarget?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        variant="destructive"
+        onConfirm={() => {
+          if (deleteTarget) deleteMutation.mutate(deleteTarget._id);
+          setDeleteTarget(null);
+        }}
+        loading={deleteMutation.isPending}
+      />
     </div>
   );
 }

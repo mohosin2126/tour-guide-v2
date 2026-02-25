@@ -1,11 +1,14 @@
-import { Package, BookOpen, Heart, Star, ArrowRight, Map, PenSquare } from "lucide-react";
+import { BookOpen, Heart, Package, Star, ArrowRight, Map, PenSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBookings } from "@/hooks/api/use-bookings";
 import { useWishlist } from "@/hooks/api/use-wishlist";
 import { useAuth } from "@/hooks/auth/use-auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import StatCard from "@/components/shared/stat-card";
+import DataTable, { type Column } from "@/components/shared/data-table";
+import EmptyState from "@/components/shared/empty-state";
 
 interface BookingRecord {
   _id: string;
@@ -14,17 +17,17 @@ interface BookingRecord {
   package?: { title?: string };
 }
 
+const statusVariant: Record<string, "success" | "pending" | "destructive" | "info"> = {
+  confirmed: "success",
+  pending: "pending",
+  cancelled: "destructive",
+  completed: "info",
+};
+
 export default function UserOverview() {
   const { user } = useAuth();
   const { data: bookings } = useBookings() as { data: BookingRecord[] | undefined };
   const { data: wishlist } = useWishlist();
-
-  const stats = [
-    { title: "My Bookings", value: bookings?.length || 0, icon: BookOpen, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-950" },
-    { title: "Wishlist", value: (wishlist as unknown[])?.length || 0, icon: Heart, color: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-950" },
-    { title: "Active Bookings", value: bookings?.filter((b) => b.status === "confirmed").length || 0, icon: Package, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950" },
-    { title: "Pending", value: bookings?.filter((b) => b.status === "pending").length || 0, icon: Star, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-950" },
-  ];
 
   const quickActions = [
     { title: "Browse Packages", href: "/packages", icon: Map, desc: "Explore new adventures" },
@@ -32,40 +35,55 @@ export default function UserOverview() {
     { title: "Share a Story", href: "/community", icon: PenSquare, desc: "Tell your experience" },
   ];
 
+  const recentColumns: Column<BookingRecord>[] = [
+    {
+      key: "package",
+      header: "Package",
+      render: (row) => <span className="font-medium">{row.package?.title || "Tour Package"}</span>,
+    },
+    {
+      key: "date",
+      header: "Date",
+      render: (row) => (
+        <span className="text-muted-foreground">
+          {row.date ? new Date(row.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "text-right",
+      render: (row) => (
+        <Badge variant={statusVariant[row.status] || "secondary"} size="sm" className="capitalize">
+          {row.status}
+        </Badge>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <Card className="border-none bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
-        <CardContent className="flex items-center gap-4 p-6">
-          <Avatar className="h-14 w-14">
+      <div className="rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 p-6 text-white">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14 border-2 border-white/30">
             <AvatarImage src={user?.photo} />
-            <AvatarFallback className="text-lg">{user?.name?.[0]}</AvatarFallback>
+            <AvatarFallback className="bg-white/20 text-lg text-white">{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">Welcome back, {user?.name?.split(" ")[0]}!</h1>
-            <p className="text-muted-foreground">Here&apos;s a summary of your activity</p>
+            <p className="text-blue-100">Here&apos;s a summary of your activity</p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title} className="transition-all hover:shadow-md">
-              <CardContent className="flex items-center gap-4 p-6">
-                <div className={`rounded-lg p-3 ${stat.bg}`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        <StatCard title="My Bookings" value={bookings?.length || 0} icon={BookOpen} color="blue" />
+        <StatCard title="Wishlist" value={(wishlist as unknown[])?.length || 0} icon={Heart} color="pink" />
+        <StatCard title="Active" value={bookings?.filter((b) => b.status === "confirmed").length || 0} icon={Package} color="emerald" />
+        <StatCard title="Pending" value={bookings?.filter((b) => b.status === "pending").length || 0} icon={Star} color="amber" />
       </div>
 
       {/* Quick Actions */}
@@ -74,68 +92,52 @@ export default function UserOverview() {
         <div className="grid gap-3 sm:grid-cols-3">
           {quickActions.map((action) => (
             <Link key={action.title} to={action.href}>
-              <Card className="group cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
-                <CardContent className="flex items-center gap-3 p-4">
-                  <div className="rounded-lg bg-primary/10 p-2">
-                    <action.icon size={20} className="text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium group-hover:text-primary">{action.title}</p>
-                    <p className="text-xs text-muted-foreground">{action.desc}</p>
-                  </div>
-                  <ArrowRight size={16} className="text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
-                </CardContent>
-              </Card>
+              <div className="group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md">
+                <div className="rounded-lg bg-primary/10 p-2.5">
+                  <action.icon size={20} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium group-hover:text-primary">{action.title}</p>
+                  <p className="text-xs text-muted-foreground">{action.desc}</p>
+                </div>
+                <ArrowRight size={16} className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </div>
             </Link>
           ))}
         </div>
       </div>
 
       {/* Recent Bookings */}
-      {bookings && bookings.length > 0 ? (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Recent Bookings</CardTitle>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Recent Bookings</h2>
+          {bookings && bookings.length > 0 && (
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/user/bookings">View All <ArrowRight size={14} className="ml-1" /></Link>
+              <Link to="/user/bookings">
+                View All <ArrowRight size={14} className="ml-1" />
+              </Link>
             </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {bookings.slice(0, 5).map((booking) => (
-                <div key={booking._id} className="flex items-center justify-between rounded-lg border p-3">
-                  <div>
-                    <p className="font-medium">{booking.package?.title || "Tour Package"}</p>
-                    <p className="text-sm text-muted-foreground">{new Date(booking.date || "").toLocaleDateString()}</p>
-                  </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      booking.status === "confirmed"
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                        : booking.status === "cancelled"
-                          ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                          : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
-                    }`}
-                  >
-                    {booking.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <BookOpen className="mb-4 h-12 w-12 text-muted-foreground/40" />
-            <h3 className="font-semibold">No bookings yet</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Start exploring and book your first adventure!</p>
-            <Button className="mt-4" asChild>
-              <Link to="/packages">Browse Packages</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </div>
+        <DataTable
+          columns={recentColumns}
+          data={(bookings || []).slice(0, 5)}
+          keyExtractor={(row) => row._id}
+          compact
+          emptyState={
+            <EmptyState
+              icon={BookOpen}
+              title="No bookings yet"
+              description="Start exploring and book your first adventure!"
+              action={
+                <Button asChild size="sm">
+                  <Link to="/packages">Browse Packages</Link>
+                </Button>
+              }
+            />
+          }
+        />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,15 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e11d48" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <circle cx="24" cy="24" r="22" stroke="url(#logoGrad)" stroke-width="2.5" fill="none" />
+  <circle cx="24" cy="24" r="3" fill="url(#logoGrad)" />
+  <path d="M24 6 L26.5 20 L24 18 L21.5 20 Z" fill="#e11d48" />
+  <path d="M24 42 L26.5 28 L24 30 L21.5 28 Z" fill="#3b82f6" />
+  <path d="M6 24 L20 21.5 L18 24 L20 26.5 Z" fill="#3b82f6" />
+  <path d="M42 24 L28 21.5 L30 24 L28 26.5 Z" fill="#e11d48" />
+  <circle cx="24" cy="24" r="14" stroke="url(#logoGrad)" stroke-width="0.75" fill="none" opacity="0.4" />
+</svg>

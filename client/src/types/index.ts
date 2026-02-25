@@ -111,6 +111,7 @@ export interface DashboardMenuItem {
   title: string;
   href: string;
   icon: LucideIcon;
+  section?: string;
 }
 
 export interface AuthContextType {

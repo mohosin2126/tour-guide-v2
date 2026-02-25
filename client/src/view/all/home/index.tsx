@@ -2,10 +2,7 @@ import { useState } from "react";
 import ChooseCard from "@/components/reuseable/choose-card";
 import FQAPage from "./fqa";
 import HeroSection from "./hero-section";
-import { FaHandHoldingUsd } from "react-icons/fa";
-import { GoShieldCheck } from "react-icons/go";
-import { MdSupportAgent } from "react-icons/md";
-import { FaMapLocationDot } from "react-icons/fa6";
+import { CreditCard, ShieldCheck, Headphones, MapPin } from "lucide-react";
 import Title from "@/components/reuseable/title";
 import TopPlace from "./top-place";
 import Testimonials from "./testimonials";
@@ -17,7 +14,7 @@ import { useCategories } from "@/hooks/api/use-general";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, MapPin, DollarSign } from "lucide-react";
+import { Clock, DollarSign } from "lucide-react";
 import { CardSkeleton } from "@/components/ui/loading";
 
 const blogData = [
@@ -77,24 +74,28 @@ export default function HomePage() {
         <Title title="We are best" subTitle="Why Choose Travic" className="text-center" />
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <ChooseCard
-            icon={FaHandHoldingUsd}
+            icon={CreditCard}
             title="Flexible Payment"
             desc="Multiple payment options with easy installment plans for your convenience"
+            color="amber"
           />
           <ChooseCard
-            icon={GoShieldCheck}
+            icon={ShieldCheck}
             title="Verified Guides"
             desc="All our tour guides are thoroughly vetted and certified experts in their regions"
+            color="emerald"
           />
           <ChooseCard
-            icon={MdSupportAgent}
+            icon={Headphones}
             title="24/7 Support"
             desc="Round-the-clock customer support to assist you at every step of your journey"
+            color="blue"
           />
           <ChooseCard
-            icon={FaMapLocationDot}
+            icon={MapPin}
             title="Best Destinations"
             desc="Handpicked destinations curated by travel experts for unforgettable experiences"
+            color="rose"
           />
         </div>
 

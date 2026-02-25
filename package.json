@@ -1,0 +1,19 @@
+{
+  "name": "tour-guide-v2",
+  "private": true,
+  "version": "1.0.0",
+  "description": "TourGuide — Full-stack travel platform monorepo",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "dev:client": "pnpm --filter tour-guide-client dev",
+    "dev:server": "pnpm --filter tour-guide-server start",
+    "build": "pnpm --filter tour-guide-client build",
+    "lint": "pnpm --filter tour-guide-client lint",
+    "seed": "pnpm --filter tour-guide-server seed",
+    "preview": "pnpm --filter tour-guide-client preview"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

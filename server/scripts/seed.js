@@ -7,11 +7,7 @@ const Review = require("../models/review");
 const Comment = require("../models/comment");
 const Wishlist = require("../models/wishlist");
 
-/**
- * Seeds the database with demo data.
- * Drops all existing data and re-inserts fresh demo records for every collection.
- * Call after mongoose.connect() has resolved.
- */
+
 async function seedDatabase() {
   try {
     console.log("\n🌱 Seeding database...");

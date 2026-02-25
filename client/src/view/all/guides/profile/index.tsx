@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { PageLoader } from "@/components/ui/loading";
+import { useLoginGuard } from "@/components/shared/login-modal";
 
 export default function GuideProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ export default function GuideProfilePage() {
   const { data: reviewsData } = useGuideReviews(id);
   const { data: allGuides } = useGuides();
   const { isAuthenticated, user } = useAuth();
+  const { requireLogin, LoginModal } = useLoginGuard();
   const createReview = useCreateReview();
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
@@ -147,57 +149,47 @@ export default function GuideProfilePage() {
         )}
 
         {/* Leave a Review Section */}
-        {isAuthenticated && (
-          <div className="mt-8">
-            <h2 className="mb-4 text-2xl font-semibold">Leave a Review</h2>
-            <Card>
-              <CardContent className="p-6">
-                <div className="mb-4">
-                  <label className="mb-2 block text-sm font-medium">Rating</label>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        onClick={() => setReviewRating(star)}
-                        className="transition-transform hover:scale-110"
-                      >
-                        <Star
-                          size={28}
-                          className={
-                            star <= reviewRating
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-muted-foreground"
-                          }
-                        />
-                      </button>
-                    ))}
-                  </div>
+        <div className="mt-8">
+          <h2 className="mb-4 text-2xl font-semibold">Leave a Review</h2>
+          <Card>
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <label className="mb-2 block text-sm font-medium">Rating</label>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setReviewRating(star)}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <Star
+                        size={28}
+                        className={
+                          star <= reviewRating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-muted-foreground"
+                        }
+                      />
+                    </button>
+                  ))}
                 </div>
-                <Textarea
-                  placeholder="Share your experience with this guide..."
-                  value={reviewComment}
-                  onChange={(e) => setReviewComment(e.target.value)}
-                  rows={4}
-                />
-                <Button
-                  className="mt-3"
-                  onClick={handleSubmitReview}
-                  disabled={!reviewComment.trim() || createReview.isPending}
-                >
-                  {createReview.isPending ? "Submitting..." : "Submit Review"}
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-        {!isAuthenticated && (
-          <div className="mt-8 rounded-xl border bg-muted/50 p-8 text-center">
-            <p className="mb-3 text-muted-foreground">Log in to leave a review for this guide</p>
-            <Link to="/auth/login">
-              <Button>Sign In to Review</Button>
-            </Link>
-          </div>
-        )}
+              </div>
+              <Textarea
+                placeholder="Share your experience with this guide..."
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                rows={4}
+              />
+              <Button
+                className="mt-3"
+                onClick={() => requireLogin(handleSubmitReview, "Please log in to leave a review.")}
+                disabled={!reviewComment.trim() || createReview.isPending}
+              >
+                {createReview.isPending ? "Submitting..." : "Submit Review"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Other Guides You May Like */}
         {otherGuides.length > 0 && (
@@ -227,6 +219,8 @@ export default function GuideProfilePage() {
           </div>
         )}
       </div>
+
+      {LoginModal}
     </div>
   );
 }

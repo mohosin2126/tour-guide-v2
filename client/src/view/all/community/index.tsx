@@ -10,6 +10,8 @@ import { PageLoader } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import PageHero from "@/components/shared/page-hero";
+import { useLoginGuard } from "@/components/shared/login-modal";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +25,7 @@ export default function Community() {
   const { data: stories, isLoading } = useStories();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const { requireLogin, LoginModal } = useLoginGuard();
   const toggleLike = useToggleLike();
   const createStory = useCreateStory();
 
@@ -32,19 +35,15 @@ export default function Community() {
   const [imageUrl, setImageUrl] = useState("");
 
   const handleLike = (storyId: string) => {
-    if (!isAuthenticated || !user) {
-      navigate("/auth/login");
-      return;
-    }
-    toggleLike.mutate({ storyId, userId: user._id });
+    requireLogin(() => {
+      toggleLike.mutate({ storyId, userId: user!._id });
+    }, "Please log in to like stories.");
   };
 
   const handleShareStory = () => {
-    if (!isAuthenticated) {
-      navigate("/auth/login", { state: { from: { pathname: "/community" } } });
-      return;
-    }
-    setOpen(true);
+    requireLogin(() => {
+      setOpen(true);
+    }, "Please log in to share your travel story.");
   };
 
   const handleSubmit = () => {
@@ -72,26 +71,23 @@ export default function Community() {
   return (
     <div className="min-h-screen pb-16">
       {/* Hero */}
-      <div className="relative flex h-[320px] items-center justify-center bg-gradient-to-br from-primary/90 to-primary/60 text-white">
-        <div
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1600')] bg-cover bg-center opacity-30"
-        />
-        <div className="relative z-10 text-center">
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">Community Stories</h1>
-          <p className="mt-3 text-lg text-white/80">
-            Share your travel experiences and inspire others
-          </p>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="mt-6"
-            onClick={handleShareStory}
-          >
-            <PenSquare size={18} className="mr-2" />
-            Share Your Story
-          </Button>
-        </div>
-      </div>
+      <PageHero
+        title="Community Stories"
+        subtitle="Share your travel experiences and inspire others"
+        backgroundImage="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1600"
+        height="short"
+        breadcrumbs={[{ label: "Community" }]}
+      >
+        <Button
+          size="lg"
+          variant="secondary"
+          className="mt-6"
+          onClick={handleShareStory}
+        >
+          <PenSquare size={18} className="mr-2" />
+          Share Your Story
+        </Button>
+      </PageHero>
 
       <div className="custom-container max-w-3xl pt-10">
         {!stories?.length ? (
@@ -206,6 +202,8 @@ export default function Community() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {LoginModal}
     </div>
   );
 }

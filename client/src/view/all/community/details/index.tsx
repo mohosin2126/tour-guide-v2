@@ -11,11 +11,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { PageLoader } from "@/components/ui/loading";
+import { useLoginGuard } from "@/components/shared/login-modal";
 
 export default function StoryDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const { requireLogin, LoginModal } = useLoginGuard();
   const { data: story, isLoading } = useStory(id);
   const { data: comments, refetch: refetchComments } = useComments(id);
   const toggleLike = useToggleLike();
@@ -23,11 +25,9 @@ export default function StoryDetails() {
   const [submitting, setSubmitting] = useState(false);
 
   const handleLike = () => {
-    if (!isAuthenticated || !user) {
-      navigate("/auth/login", { state: { from: { pathname: `/community/${id}` } } });
-      return;
-    }
-    toggleLike.mutate({ storyId: id!, userId: user._id });
+    requireLogin(() => {
+      toggleLike.mutate({ storyId: id!, userId: user!._id });
+    }, "Please log in to like this story.");
   };
 
   const handleComment = async () => {
@@ -180,6 +180,8 @@ export default function StoryDetails() {
           </div>
         </div>
       </div>
+
+      {LoginModal}
     </div>
   );
 }

@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, DollarSign, X } from "lucide-react";
+import { Calendar, X } from "lucide-react";
 import { useBookings, useCancelBooking } from "@/hooks/api/use-bookings";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageLoader } from "@/components/ui/loading";
+import DataTable, { type Column } from "@/components/shared/data-table";
+import EmptyState from "@/components/shared/empty-state";
+import ConfirmDialog from "@/components/shared/confirm-dialog";
 
 interface BookingRecord {
   _id: string;
@@ -15,16 +18,81 @@ interface BookingRecord {
   package?: { title?: string; images?: string[] };
 }
 
-const statusStyles: Record<string, string> = {
-  pending: "warning",
+const statusVariant: Record<string, "success" | "warning" | "destructive" | "info" | "pending"> = {
+  pending: "pending",
   confirmed: "success",
   cancelled: "destructive",
-  completed: "default",
+  completed: "info",
 };
 
 export default function UserBookings() {
   const { data: bookings, isLoading } = useBookings() as { data: BookingRecord[] | undefined; isLoading: boolean };
   const cancelMutation = useCancelBooking();
+  const [cancelTarget, setCancelTarget] = useState<BookingRecord | null>(null);
+
+  const columns: Column<BookingRecord>[] = [
+    {
+      key: "package",
+      header: "Package",
+      render: (row) => (
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+            <img
+              src={row.package?.images?.[0] || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200"}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <span className="font-medium">{row.package?.title || "Tour Package"}</span>
+        </div>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      render: (row) => (
+        <span className="text-muted-foreground">
+          {row.date ? new Date(row.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "guests",
+      header: "Guests",
+      render: (row) => <span>{row.guests || 1}</span>,
+    },
+    {
+      key: "price",
+      header: "Amount",
+      render: (row) => <span className="font-semibold">${row.totalPrice?.toLocaleString() || 0}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (row) => (
+        <Badge variant={statusVariant[row.status] || "secondary"} className="capitalize">
+          {row.status}
+        </Badge>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (row) =>
+        row.status === "pending" ? (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={(e) => { e.stopPropagation(); setCancelTarget(row); }}
+          >
+            <X size={14} className="mr-1.5" />
+            Cancel
+          </Button>
+        ) : null,
+    },
+  ];
 
   if (isLoading) return <PageLoader />;
 
@@ -32,58 +100,42 @@ export default function UserBookings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">My Bookings</h1>
-        <p className="text-muted-foreground">View and manage your tour bookings</p>
+        <p className="text-muted-foreground">
+          View and manage your {bookings?.length || 0} tour bookings
+        </p>
       </div>
-      {!bookings?.length ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-          <Calendar className="mb-4 h-16 w-16 text-muted-foreground/50" />
-          <h3 className="text-lg font-semibold">No bookings yet</h3>
-          <p className="text-muted-foreground">Browse our packages to book your first tour</p>
-          <Button className="mt-4" asChild>
-            <Link to="/packages">Browse Packages</Link>
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {bookings.map((booking) => (
-            <Card key={booking._id}>
-              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-4">
-                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-md bg-muted">
-                    <img
-                      src={booking.package?.images?.[0] || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200"}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{booking.package?.title || "Tour Package"}</h3>
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} />{new Date(booking.date || "").toLocaleDateString()}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <DollarSign size={14} />{booking.totalPrice}
-                      </span>
-                      {booking.guests && <span>{booking.guests} guest(s)</span>}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant={statusStyles[booking.status] as "default" | "destructive" | "outline" | "secondary" | undefined || "default"}>
-                    {booking.status}
-                  </Badge>
-                  {booking.status === "pending" && (
-                    <Button size="sm" variant="destructive" disabled={cancelMutation.isPending} onClick={() => cancelMutation.mutate(booking._id)}>
-                      <X size={14} className="mr-1" />Cancel
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+
+      <DataTable
+        columns={columns}
+        data={bookings || []}
+        keyExtractor={(row) => row._id}
+        emptyState={
+          <EmptyState
+            icon={Calendar}
+            title="No bookings yet"
+            description="Browse our packages to book your first tour"
+            action={
+              <Button asChild size="sm">
+                <Link to="/packages">Browse Packages</Link>
+              </Button>
+            }
+          />
+        }
+      />
+
+      <ConfirmDialog
+        open={!!cancelTarget}
+        onOpenChange={() => setCancelTarget(null)}
+        title="Cancel Booking"
+        description={`Are you sure you want to cancel your booking for "${cancelTarget?.package?.title}"? This action cannot be undone.`}
+        confirmText="Cancel Booking"
+        variant="destructive"
+        onConfirm={() => {
+          if (cancelTarget) cancelMutation.mutate(cancelTarget._id);
+          setCancelTarget(null);
+        }}
+        loading={cancelMutation.isPending}
+      />
     </div>
   );
 }

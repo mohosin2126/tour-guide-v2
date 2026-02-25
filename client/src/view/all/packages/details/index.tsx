@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageLoader } from "@/components/ui/loading";
+import { useLoginGuard } from "@/components/shared/login-modal";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,7 @@ export default function PackageDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const { requireLogin, LoginModal } = useLoginGuard();
   const { data: pkg, isLoading } = usePackage(id);
   const bookMutation = useCreateBooking();
   const wishlistMutation = useAddToWishlist();
@@ -69,11 +71,7 @@ export default function PackageDetails() {
   const itinerary = pkg.activities || pkg.itinerary || [];
 
   const handleBook = () => {
-    if (!isAuthenticated) {
-      navigate("/auth/login", { state: { from: { pathname: `/packages/${id}` } } });
-      return;
-    }
-    setBookingOpen(true);
+    requireLogin(() => setBookingOpen(true), "Please log in to book this tour package.");
   };
 
   const confirmBooking = () => {
@@ -90,14 +88,14 @@ export default function PackageDetails() {
   };
 
   const handleWishlist = () => {
-    if (!isAuthenticated) {
-      navigate("/auth/login", { state: { from: { pathname: `/packages/${id}` } } });
-      return;
-    }
-    if (isWishlisted && wishlistEntry) {
-      removeWishlistMutation.mutate(wishlistEntry._id as string);
-    } else {
-      wishlistMutation.mutate(pkg._id);
+    requireLogin(() => {
+      if (isWishlisted && wishlistEntry) {
+        removeWishlistMutation.mutate(wishlistEntry._id as string);
+      } else {
+        wishlistMutation.mutate(pkg._id);
+      }
+    }, "Please log in to manage your wishlist.");
+  };
     }
   };
 
@@ -449,6 +447,8 @@ export default function PackageDetails() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {LoginModal}
     </div>
   );
 }

@@ -10,6 +10,7 @@ import AnimatedButton from "@/components/ui/animated-button";
 import api from "@/hooks/auth/use-api";
 import Subscribe from "@/components/shared/subscribe";
 import Accordion from "@/components/reuseable/accordion";
+import PageHero from "@/components/shared/page-hero";
 
 const contactCards = [
   { icon: MapPin, title: "Our Location", lines: ["1901 Thornridge Cir.", "Shiloh, Hawaii 81063"] },
@@ -46,21 +47,13 @@ export default function ContactUs() {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="relative flex h-[50vh] min-h-[380px] items-center justify-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600')" }}
-        >
-          <div className="absolute inset-0 bg-black/60" />
-        </div>
-        <div className="relative z-10 text-center text-white">
-          <h1 className="text-4xl font-bold md:text-5xl">Contact Us</h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
-            Have a question or need help planning your trip? We&apos;re here to help.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        title="Contact Us"
+        subtitle="Have a question or need help planning your trip? We're here to help."
+        backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600"
+        height="short"
+        breadcrumbs={[{ label: "Contact" }]}
+      />
 
       <div className="custom-container">
         {/* Contact Cards */}
