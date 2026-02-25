@@ -51,7 +51,7 @@ export default function Footer() {
         <div className="mt-12">
           <div className="h-px w-full bg-border" />
           <p className="pt-6 text-center text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} TourGuide. All rights reserved.
+            &copy; {new Date().getFullYear()} MAS All rights reserved.
           </p>
         </div>
       </div>

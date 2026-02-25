@@ -17,6 +17,7 @@ import {
 import { CardSkeleton } from "@/components/ui/loading";
 import PageHero from "@/components/shared/page-hero";
 import Subscribe from "@/view/all/home/subscribe";
+import Title from "@/components/reuseable/title";
 
 export default function PackagesPage() {
   const [search, setSearch] = useState("");
@@ -204,8 +205,11 @@ export default function PackagesPage() {
       {/* Popular Categories Section */}
       {categories?.length > 0 && (
         <div className="custom-container mt-16">
-          <h2 className="mb-2 text-center text-3xl font-bold">Popular Categories</h2>
-          <p className="mb-8 text-center text-muted-foreground">Browse tours by category</p>
+          <Title
+            title="Explore More"
+            subTitle="Popular Categories"
+            className="mb-8 text-center"
+          />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {categories.map((cat: Record<string, string>) => (
               <button
@@ -238,8 +242,11 @@ export default function PackagesPage() {
 
       {/* Why Book With Us Section */}
       <div className="custom-container mt-16">
-        <h2 className="mb-2 text-center text-3xl font-bold">Why Book With Us</h2>
-        <p className="mb-8 text-center text-muted-foreground">We make your travel experience seamless</p>
+        <Title
+          title="Travel With Confidence"
+          subTitle="Why Book With Us"
+          className="mb-8 text-center"
+        />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: ShieldCheck, title: "Verified Guides", desc: "All guides are thoroughly vetted and certified professionals" },

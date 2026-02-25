@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageLoader } from "@/components/ui/loading";
 import { AnimatedButton } from "@/components/ui/animated-button";
 import PageHero from "@/components/shared/page-hero";
+import Title from "@/components/reuseable/title";
 
 export default function GuidesPage() {
   const { data: guides, isLoading } = useGuides();
@@ -92,8 +93,11 @@ export default function GuidesPage() {
 
         {/* How It Works Section */}
         <div className="mt-20">
-          <h2 className="mb-2 text-center text-3xl font-bold">How It Works</h2>
-          <p className="mb-12 text-center text-muted-foreground">Three simple steps to your dream trip</p>
+          <Title
+            title="Simple Process"
+            subTitle="How It Works"
+            className="mb-12 text-center"
+          />
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               { icon: Search, step: "01", title: "Browse Guides", desc: "Explore our verified guides, read reviews, and find the perfect match for your journey." },
@@ -113,23 +117,28 @@ export default function GuidesPage() {
         </div>
 
         {/* Become a Guide CTA */}
-        <div className="my-20 overflow-hidden rounded-2xl bg-gradient-to-r from-primary/90 to-primary">
-          <div className="flex flex-col items-center justify-between gap-8 p-12 md:flex-row">
-            <div className="max-w-lg text-white">
+        <div className="relative -bottom-4 my-20 mx-auto w-10/12 overflow-hidden rounded-lg bg-amber-600 p-3 sm:p-10">
+          <div className="flex flex-col items-center justify-between gap-10 lg:flex-row">
+            <div className="z-10 flex-1 text-white">
               <div className="mb-3 flex items-center gap-2">
                 <UserPlus className="h-6 w-6" />
                 <span className="text-sm font-semibold uppercase tracking-wider">Join Our Team</span>
               </div>
-              <h2 className="text-3xl font-bold">Become a Tour Guide</h2>
-              <p className="mt-3 text-white/80">
+              <h2 className="text-[2.5rem] font-bold">Become a Tour Guide</h2>
+              <p className="mt-3 text-white/90">
                 Share your passion and local expertise with travelers from around the world. Join our community of professional guides and start earning today.
               </p>
             </div>
-            <Link to="/auth/register">
-              <AnimatedButton className="border-white bg-white text-primary hover:text-primary">
-                Register as Guide
-              </AnimatedButton>
-            </Link>
+            <div className="absolute inset-0 z-0 flex items-center justify-center">
+              <img src="/subscribe.png" className="h-52 w-52" alt="" />
+            </div>
+            <div className="z-10 w-full flex-1 text-right">
+              <Link to="/auth/register">
+                <AnimatedButton className="border-white bg-white text-primary hover:text-primary">
+                  Register as Guide
+                </AnimatedButton>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

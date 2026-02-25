@@ -3,6 +3,7 @@ import { Users, Globe, Award, Shield, Heart, MapPin, Star, Headphones, ArrowRigh
 import AnimatedButton from "@/components/ui/animated-button";
 import { Card, CardContent } from "@/components/ui/card";
 import PageHero from "@/components/shared/page-hero";
+import Title from "@/components/reuseable/title";
 
 const stats = [
   { number: "10K+", label: "Happy Travelers", icon: Users },
@@ -69,8 +70,11 @@ export default function AboutUsPage() {
         <section className="py-16">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <p className="mb-2 font-semibold uppercase tracking-wider text-primary">Our Mission</p>
-              <h2 className="text-3xl font-bold">Connecting Travelers with Unforgettable Experiences</h2>
+              <Title
+                title="Our Mission"
+                subTitle="Connecting Travelers with Unforgettable Experiences"
+                className="my-0"
+              />
               <p className="mt-4 leading-relaxed text-muted-foreground">
                 We believe that travel is more than just visiting new places — it&apos;s about creating lasting memories, 
                 building connections, and discovering the world through the eyes of passionate local guides.
@@ -116,10 +120,11 @@ export default function AboutUsPage() {
 
         {/* Values */}
         <section className="py-16">
-          <div className="mb-10 text-center">
-            <p className="mb-2 font-semibold uppercase tracking-wider text-primary">Our Values</p>
-            <h2 className="text-3xl font-bold">What We Stand For</h2>
-          </div>
+          <Title
+            title="Our Values"
+            subTitle="What We Stand For"
+            className="mb-10 text-center"
+          />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((v) => (
               <Card key={v.title} className="border-none bg-muted/50 transition-all hover:shadow-md">
@@ -137,10 +142,11 @@ export default function AboutUsPage() {
 
         {/* Team */}
         <section className="py-16">
-          <div className="mb-10 text-center">
-            <p className="mb-2 font-semibold uppercase tracking-wider text-primary">Our Team</p>
-            <h2 className="text-3xl font-bold">Meet the People Behind the Magic</h2>
-          </div>
+          <Title
+            title="Our Team"
+            subTitle="Meet the People Behind the Magic"
+            className="mb-10 text-center"
+          />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {team.map((member) => (
               <div key={member.name} className="group text-center">
@@ -155,18 +161,29 @@ export default function AboutUsPage() {
         </section>
 
         {/* CTA */}
-        <section className="mb-16 rounded-2xl bg-primary/5 p-10 text-center">
-          <h2 className="text-2xl font-bold">Ready to Start Your Adventure?</h2>
-          <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Browse our curated tour packages or become a guide and share your expertise with travelers from around the world.
-          </p>
-          <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link to="/packages">
-              <AnimatedButton size="lg">Browse Packages</AnimatedButton>
-            </Link>
-            <Link to="/guides">
-              <AnimatedButton size="lg">Find a Guide</AnimatedButton>
-            </Link>
+        <section className="relative -bottom-4 mb-16 mx-auto w-10/12 overflow-hidden rounded-lg bg-amber-600 p-3 sm:p-10">
+          <div className="flex flex-col items-center justify-between gap-10 lg:flex-row">
+            <div className="z-10 flex-1 text-white">
+              <h2 className="text-[2.5rem] font-bold">Ready to Start Your Adventure?</h2>
+              <p className="mt-3 max-w-xl text-white/90">
+                Browse our curated tour packages or become a guide and share your expertise with travelers from around the world.
+              </p>
+            </div>
+            <div className="absolute inset-0 z-0 flex items-center justify-center">
+              <img src="/subscribe.png" className="h-52 w-52" alt="" />
+            </div>
+            <div className="z-10 flex w-full flex-1 flex-col items-end gap-4 sm:flex-row sm:justify-end">
+              <Link to="/packages">
+                <AnimatedButton size="lg" className="border-white bg-white text-primary hover:text-primary">
+                  Browse Packages
+                </AnimatedButton>
+              </Link>
+              <Link to="/guides">
+                <AnimatedButton size="lg" className="border-white bg-white text-primary hover:text-primary">
+                  Find a Guide
+                </AnimatedButton>
+              </Link>
+            </div>
           </div>
         </section>
       </div>

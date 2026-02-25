@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import PageHero from "@/components/shared/page-hero";
 import { useLoginGuard } from "@/components/shared/login-modal";
+import Title from "@/components/reuseable/title";
 import {
   Dialog,
   DialogContent,
@@ -99,6 +100,11 @@ export default function Community() {
       </PageHero>
 
       <div className="custom-container max-w-3xl pt-10">
+        <Title
+          title="From Travelers"
+          subTitle="Community Stories"
+          className="my-0 mb-8 text-center"
+        />
         {!stories?.length ? (
           <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
             <BookOpen className="mb-4 h-16 w-16 text-muted-foreground/50" />

@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import AnimatedButton from "@/components/ui/animated-button";
 import api from "@/hooks/auth/use-api";
 import { toast } from "sonner";
-import Subscribe from "@/components/shared/subscribe";
 import Accordion from "@/components/reuseable/accordion";
 import PageHero from "@/components/shared/page-hero";
+import Title from "@/components/reuseable/title";
+import Subscribe from "../home/subscribe";
 
 const contactCards = [
   { icon: MapPin, title: "Our Location", lines: ["1901 Thornridge Cir.", "Shiloh, Hawaii 81063"] },
@@ -64,7 +65,7 @@ export default function ContactUs() {
         ]}
       />
 
-      <div className="custom-container">
+      <div className="custom-container mx-auto mt-12">
         {/* Contact Cards */}
         <section className="relative z-10 -mt-16">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -88,8 +89,11 @@ export default function ContactUs() {
         <section className="py-16">
           <div className="grid items-start gap-12 lg:grid-cols-2">
             <div>
-              <p className="mb-2 font-semibold uppercase tracking-wider text-primary">Get in Touch</p>
-              <h2 className="text-3xl font-bold">Send Us a Message</h2>
+              <Title
+                title="Get in Touch"
+                subTitle="Send Us a Message"
+                className="my-0"
+              />
               <p className="mt-3 text-muted-foreground">
                 Fill out the form and our team will get back to you within 24 hours.
               </p>
@@ -167,16 +171,21 @@ export default function ContactUs() {
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <HelpCircle className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
-            <p className="mt-2 text-muted-foreground">Quick answers to common questions</p>
+            <Title
+              title="Need Help?"
+              subTitle="Frequently Asked Questions"
+              className="my-0"
+            />
+            <p className="text-muted-foreground">Quick answers to common questions</p>
           </div>
           <div className="mx-auto max-w-2xl">
             <Accordion questions={faqItems} />
           </div>
         </section>
       </div>
-
-      <Subscribe />
+       <div className="md:w-2/3 mx-auto">
+         <Subscribe />
+       </div>
     </div>
   );
 }

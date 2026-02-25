@@ -71,7 +71,7 @@ export default function HomePage() {
         </div>
 
         {/* Why Choose Us */}
-        <Title title="We are best" subTitle="Why Choose Travic" className="text-center" />
+        <Title title="We are best" subTitle="Why Choose Us" className="text-center" />
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <ChooseCard
             icon={CreditCard}
