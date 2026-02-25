@@ -1,9 +1,9 @@
 
-:root {
+.top-place-cards {
     /* Colors */
     --brand-color: hsl(46, 100%, 50%);
-    --black: hsl(0, 0%, 0%);
-    --white: hsl(0, 0%, 100%);
+    --tp-black: hsl(0, 0%, 0%);
+    --tp-white: hsl(0, 0%, 100%);
     /* Fonts */
     --font-title: "Montserrat", sans-serif;
     --font-text: "Lato", sans-serif;
@@ -12,32 +12,25 @@
 /* RESET */
 
 /* Box sizing rules */
-*,
-*::before,
-*::after {
+.top-place-cards *,
+.top-place-cards *::before,
+.top-place-cards *::after {
     box-sizing: border-box;
 }
 
-/* Remove default margin */
-body,
-h2,
-p {
-    margin: 0;
-}
 
-
-h2 {
+.top-place-cards h2 {
     font-size: 2.25rem;
     font-family: var(--font-title);
-    color: var(--white);
+    color: var(--tp-white);
     line-height: 1.1;
 }
 
-p {
+.top-place-cards p {
     font-family: var(--font-text);
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--white);
+    color: var(--tp-white);
 }
 
 .flow > * + * {
@@ -115,7 +108,7 @@ p {
     background-color: var(--brand-color);
     font-family: var(--font-title);
     font-size: 1.125rem;
-    color: var(--black);
+    color: var(--tp-black);
 }
 
 .card__button:focus {

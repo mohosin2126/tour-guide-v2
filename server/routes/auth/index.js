@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getToken } = require("../../controllers/auth/index");
+const { register, login, getToken } = require("../../controllers/auth/index");
+const verifyToken = require("../../middleware/auth/index");
 
-router.post("/token", getToken);
+router.post("/register", register);
+router.post("/login", login);
+router.post("/token", verifyToken, getToken);
 
 module.exports = router;
