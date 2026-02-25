@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Star, Mail, Phone, MapPin } from "lucide-react";
+import { useParams,  Link } from "react-router-dom";
+import {  Star, Mail, Phone, MapPin } from "lucide-react";
 import { useGuide, useGuides } from "@/hooks/api/use-general";
 import { useGuidePackages } from "@/hooks/api/use-packages";
 import { useGuideReviews, useCreateReview } from "@/hooks/api/use-reviews";
@@ -15,7 +15,6 @@ import { useLoginGuard } from "@/components/shared/login-modal";
 
 export default function GuideProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { data: guide, isLoading } = useGuide(id);
   const { data: packages } = useGuidePackages(id);
   const { data: reviewsData } = useGuideReviews(id);
@@ -48,9 +47,7 @@ export default function GuideProfilePage() {
   return (
     <div className="min-h-screen pb-16 pt-24">
       <div className="custom-container max-w-4xl">
-        <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
-          <ArrowLeft size={18} className="mr-2" />Back
-        </Button>
+       
         <Card>
           <CardContent className="p-8">
             <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">

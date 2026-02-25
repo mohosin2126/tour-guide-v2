@@ -171,7 +171,7 @@ export default function AdminCategories() {
                     className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                     onClick={() => setDeleteTarget(cat)}
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={24} />
                   </Button>
                 </div>
               </div>

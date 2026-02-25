@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Heart, Calendar, Send, LogIn } from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import {  Heart, Calendar, Send, LogIn } from "lucide-react";
 import { useStory, useToggleLike } from "@/hooks/api/use-stories";
 import { useComments } from "@/hooks/api/use-general";
 import { useAuth } from "@/hooks/auth/use-auth";
@@ -15,7 +15,6 @@ import { useLoginGuard } from "@/components/shared/login-modal";
 
 export default function StoryDetails() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const { requireLogin, LoginModal } = useLoginGuard();
   const { data: story, isLoading } = useStory(id);
@@ -52,11 +51,6 @@ export default function StoryDetails() {
   return (
     <div className="min-h-screen pb-16 pt-24">
       <div className="custom-container max-w-3xl">
-        <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
-          <ArrowLeft size={18} className="mr-2" />
-          Back
-        </Button>
-
         <article>
           <div className="mb-6 flex items-center gap-3">
             <Avatar className="h-12 w-12">

@@ -108,7 +108,7 @@ export default function AdminPackages() {
             setDeleteId(row._id);
           }}
         >
-          <Trash2 size={18} />
+          <Trash2 size={24} />
         </Button>
       ),
     },

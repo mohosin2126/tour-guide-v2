@@ -85,7 +85,7 @@ export default function AdminStories() {
           className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
           onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); }}
         >
-          <Trash2 size={18} />
+          <Trash2 size={24} />
         </Button>
       ),
     },

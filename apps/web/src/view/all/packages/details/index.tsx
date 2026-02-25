@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { MapPin, Clock, Users, Star, Heart, ArrowLeft, Share2, CheckCircle2, CalendarDays } from "lucide-react";
+import { MapPin, Clock, Users, Star, Heart, Share2, CheckCircle2, CalendarDays } from "lucide-react";
 import { usePackage, usePackages } from "@/hooks/api/use-packages";
 import { useCreateBooking } from "@/hooks/api/use-bookings";
 import { useAddToWishlist, useWishlist, useRemoveFromWishlist } from "@/hooks/api/use-wishlist";
@@ -40,7 +40,7 @@ export default function PackageDetails() {
   const [guests, setGuests] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Related packages in same category
+
   const { data: relatedData } = usePackages({
     category: pkg?.category?._id || "",
     limit: "4",
@@ -50,11 +50,11 @@ export default function PackageDetails() {
     (relatedData as Record<string, unknown>[]) || []
   ).filter((p) => (p._id as string) !== id);
 
-  // Guide reviews
+ 
   const { data: reviewsData } = useGuideReviews(pkg?.guide?._id);
   const reviews = reviewsData?.reviews || [];
 
-  // Check if already wishlisted
+
   const wishlistItems = wishlistData || [];
   const wishlistEntry = wishlistItems.find(
     (w: Record<string, unknown>) =>
@@ -131,9 +131,6 @@ export default function PackageDetails() {
   return (
     <div className="min-h-screen pb-16 pt-24">
       <div className="custom-container">
-        <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
-          <ArrowLeft size={18} className="mr-2" />Back
-        </Button>
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             {/* Image Gallery */}

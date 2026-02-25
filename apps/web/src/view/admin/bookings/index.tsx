@@ -109,7 +109,7 @@ export default function AdminBookings() {
               className="h-9 w-9 p-0 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-900/30"
               onClick={(e) => { e.stopPropagation(); setConfirmAction({ id: row._id, action: "confirmed" }); }}
             >
-              <Check size={18} />
+              <Check size={24} />
             </Button>
             <Button
               size="sm"
@@ -117,7 +117,7 @@ export default function AdminBookings() {
               className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10"
               onClick={(e) => { e.stopPropagation(); setConfirmAction({ id: row._id, action: "cancelled" }); }}
             >
-              <X size={18} />
+              <X size={24} />
             </Button>
           </div>
         ) : null,
