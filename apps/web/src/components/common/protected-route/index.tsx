@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/auth/use-auth";
 import type { ReactNode } from "react";
+import { Skeleton } from "@/components/ui/loading";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -14,7 +15,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
+        <Skeleton className="h-12 w-12 rounded-full" />
       </div>
     );
   }
@@ -29,3 +30,4 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
 
   return <>{children}</>;
 }
+

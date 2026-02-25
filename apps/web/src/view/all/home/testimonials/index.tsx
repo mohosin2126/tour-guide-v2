@@ -2,6 +2,7 @@ import { Star, Quote } from "lucide-react";
 import Title from "@/components/reuseable/title";
 import { useLatestReviews } from "@/hooks/api/use-reviews";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/loading";
 
 type ReviewUser = {
   name?: string;
@@ -80,8 +81,7 @@ const fallbackTestimonials: Review[] = [
 
 function StarRating({ rating }: { rating: number }) {
   const safeRating = Math.max(0, Math.min(5, Number(rating) || 0));
-  const filled = Math.round(safeRating); // change to floor/ceil if you want
-
+  const filled = Math.round(safeRating);
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -164,12 +164,29 @@ export default function Testimonials() {
       />
 
       <div className="pt-4 text-center text-xs text-muted-foreground">
-        {isLoading && "Loading testimonials..."}
         {isError && "Could not load latest testimonials. Showing sample ones."}
       </div>
 
       <div className="mx-auto grid w-full grid-cols-1 gap-6 pt-10 md:grid-cols-2 lg:w-11/12 lg:grid-cols-3">
-        {displayReviews.map((testimonial) => {
+        {isLoading &&
+          Array.from({ length: limit }).map((_, i) => (
+            <div key={`testimonial-skeleton-${i}`} className="rounded-2xl border bg-card p-6">
+              <div className="mb-4 flex items-center gap-3">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+              <Skeleton className="h-4 w-24" />
+              <div className="mt-3 space-y-2">
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-5/6" />
+              </div>
+            </div>
+          ))}
+        {!isLoading && displayReviews.map((testimonial) => {
           const initials = getInitials(testimonial.user?.name);
 
           return (

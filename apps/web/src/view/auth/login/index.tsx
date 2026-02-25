@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/hooks/auth/use-auth";
+import { Skeleton } from "@/components/ui/loading";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -150,7 +151,7 @@ export default function Login() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <Skeleton className="h-4 w-4 rounded-full bg-white/70" />
                   Signing in...
                 </span>
               ) : (
@@ -183,7 +184,7 @@ export default function Login() {
                   >
                     {demoLoading === demo.email ? (
                       <span className="flex items-center gap-2">
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        <Skeleton className="h-4 w-4 rounded-full bg-white/70" />
                         Signing in...
                       </span>
                     ) : (
@@ -210,3 +211,4 @@ export default function Login() {
     </div>
   );
 }
+
