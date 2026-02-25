@@ -8,8 +8,8 @@ export default function AboutUs() {
   return (
     <div>
       <div>
-        <div className="relative flex w-full items-center justify-center">
-          <div className="moving-box absolute -top-10 right-0 flex w-[869px] items-center justify-center">
+        <div className="relative flex w-full flex-col items-center justify-center lg:flex-row">
+          <div className="moving-box absolute -top-10 right-0 hidden w-[869px] items-center justify-center lg:flex">
             <div className="space-y-2 rounded-lg bg-card p-4 text-card-foreground shadow-lg">
               <h1 className="text-center text-2xl font-bold">Contact us</h1>
               <div className="flex items-center gap-3">
@@ -20,19 +20,19 @@ export default function AboutUs() {
               </div>
             </div>
           </div>
-          <div className="w-1/2 flex-1">
+          <div className="w-full flex-1 lg:w-1/2">
             <Title
               title="About Us"
               subTitle="Planning a trip should be very exciting adventure"
-              className="text-start"
+              className="text-center lg:text-start"
             />
             <p className="text-gray-700 dark:text-gray-400">
               We&apos;re dedicated to offering exceptional value for your travel investment. Our
               relationships with trusted travel partners
             </p>
             <div className="mt-8">
-              <div className="flex w-full gap-6 px-10">
-                <div>
+              <div className="flex w-full gap-4 px-2 sm:gap-6 sm:px-10">
+                <div className="shrink-0">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="32"
@@ -51,16 +51,16 @@ export default function AboutUs() {
                     <circle cx="12" cy="12" r="10" />
                   </svg>
                 </div>
-                <div className="w-2/3">
-                  <h4 className="text-2xl font-semibold text-foreground">International Tours</h4>
+                <div className="w-full sm:w-2/3">
+                  <h4 className="text-xl font-semibold text-foreground sm:text-2xl">International Tours</h4>
                   <p className="text-gray-700 dark:text-gray-400">
                     Our team of travel professional brings a wealth of knowledge and expertise to
                     the table
                   </p>
                 </div>
               </div>
-              <div className="mt-8 flex w-full gap-6 px-10">
-                <div>
+              <div className="mt-8 flex w-full gap-4 px-2 sm:gap-6 sm:px-10">
+                <div className="shrink-0">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -78,8 +78,8 @@ export default function AboutUs() {
                     <path d="M5 14H4a2 2 0 1 0 0 4h1" />
                   </svg>
                 </div>
-                <div className="w-2/3">
-                  <h4 className="text-2xl font-semibold text-foreground">
+                <div className="w-full sm:w-2/3">
+                  <h4 className="text-xl font-semibold text-foreground sm:text-2xl">
                     Multiple Option to Choose
                   </h4>
                   <p className="text-muted-foreground">
@@ -90,24 +90,24 @@ export default function AboutUs() {
               </div>
             </div>
           </div>
-          <div className="mt-8 w-1/2 flex-1">
-            <div className="flex w-full items-center justify-center gap-6">
+          <div className="mt-8 w-full flex-1 lg:w-1/2">
+            <div className="flex w-full items-center justify-center gap-4 sm:gap-6">
               <div className="w-1/2 flex-1">
                 <img
                   src={firstImage}
-                  className="group-hover:scale-110 [transition:0.5s]"
+                  className="rounded-lg object-cover group-hover:scale-110 [transition:0.5s]"
                   alt="first image"
                 />
               </div>
-              <div className="w-1/2 flex-1 space-y-8">
+              <div className="w-1/2 flex-1 space-y-4 sm:space-y-8">
                 <img
                   src={secondImage}
-                  className="group-hover:scale-110 [transition:0.5s]"
+                  className="rounded-lg object-cover group-hover:scale-110 [transition:0.5s]"
                   alt="second image"
                 />
                 <img
                   src={thirdImage}
-                  className="w-10/12 group-hover:scale-110 [transition:0.5s]"
+                  className="w-10/12 rounded-lg object-cover group-hover:scale-110 [transition:0.5s]"
                   alt="third image"
                 />
               </div>

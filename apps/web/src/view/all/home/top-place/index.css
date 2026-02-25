@@ -42,8 +42,8 @@
 .card {
     display: grid;
     place-items: center;
-    width: 80vw;
-    max-width: 21.875rem;
+    width: 100%;
+    max-width: 100%;
     height: 28.125rem;
     overflow: hidden;
     border-radius: 0.625rem;
