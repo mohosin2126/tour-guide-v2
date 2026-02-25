@@ -55,7 +55,7 @@ export default function ContactUs() {
         subtitle="Have a question, need help planning your trip, or just want to say hello? Our team is ready to assist you 24/7."
         backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600"
         height="full"
-        breadcrumbs={[{ label: "Contact" }]}
+      
         badge={{ icon: Headphones, text: "24/7 Support Available" }}
         stats={[
           { icon: Clock, value: "<1hr", label: "Response" },

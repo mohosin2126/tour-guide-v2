@@ -50,7 +50,7 @@ export default function AboutUsPage() {
         subtitle="Since 2018, we've been connecting travelers with passionate local guides to create experiences that go beyond sightseeing — moments that stay with you forever."
         backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
         height="full"
-        breadcrumbs={[{ label: "About Us" }]}
+      
         badge={{ icon: Heart, text: "Making travel extraordinary since 2018" }}
         ctaButtons={[
           { label: "Explore Packages", href: "/packages", icon: ArrowRight },

@@ -46,7 +46,7 @@ export default function PackagesPage() {
         subtitle="Browse handpicked tour packages crafted by expert local guides. From mountain treks to cultural immersions, find the journey that speaks to you."
         backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
         height="full"
-        breadcrumbs={[{ label: "Packages" }]}
+      
         badge={{ icon: Compass, text: "500+ curated experiences" }}
         ctaButtons={[
           { label: "Browse All", href: "#packages", icon: ArrowRight },

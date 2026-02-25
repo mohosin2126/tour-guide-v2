@@ -79,7 +79,7 @@ export default function Community() {
         subtitle="Join a vibrant community of travelers sharing authentic experiences, tips, and inspiration from around the world."
         backgroundImage="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1600"
         height="full"
-        breadcrumbs={[{ label: "Community" }]}
+      
         badge={{ icon: BookOpen, text: "Real stories from real travelers" }}
         stats={[
           { icon: Heart, value: "5K+", label: "Stories" },

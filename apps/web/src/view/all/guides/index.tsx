@@ -22,7 +22,7 @@ export default function GuidesPage() {
         subtitle="Passionate locals with deep knowledge and years of experience. They don't just show you places — they bring destinations to life with stories, culture, and hidden gems."
         backgroundImage="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1200"
         height="full"
-        breadcrumbs={[{ label: "Guides" }]}
+    
         badge={{ icon: Star, text: "Top-rated local experts" }}
         ctaButtons={[
           { label: "Explore Packages", href: "/packages", icon: ArrowRight },
