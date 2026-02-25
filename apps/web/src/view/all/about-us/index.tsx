@@ -4,6 +4,7 @@ import AnimatedButton from "@/components/ui/animated-button";
 import { Card, CardContent } from "@/components/ui/card";
 import PageHero from "@/components/shared/page-hero";
 import Title from "@/components/reuseable/title";
+import aboutHeroImage from "@/assets/pexels-freestockpro-2166553.jpg";
 
 const stats = [
   { number: "10K+", label: "Happy Travelers", icon: Users },
@@ -49,7 +50,7 @@ export default function AboutUsPage() {
         title="Unscripted Journeys Await"
         gradientText="Journeys"
         subtitle="Since 2018, we've been connecting travelers with passionate local guides to create experiences that go beyond sightseeing — moments that stay with you forever."
-        backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
+        backgroundImage={aboutHeroImage}
         height="full"
       
         badge={{ icon: Heart, text: "Making travel extraordinary since 2018" }}

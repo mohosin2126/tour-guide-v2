@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import PageHero from "@/components/shared/page-hero";
 import { useLoginGuard } from "@/components/shared/login-modal";
 import Title from "@/components/reuseable/title";
+import communityHeroImage from "@/assets/community.jpg";
 import {
   Dialog,
   DialogContent,
@@ -78,7 +79,7 @@ export default function Community() {
         title="Share Your Travel Stories"
         gradientText="Stories"
         subtitle="Join a vibrant community of travelers sharing authentic experiences, tips, and inspiration from around the world."
-        backgroundImage="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1600"
+        backgroundImage={communityHeroImage}
         height="full"
       
         badge={{ icon: BookOpen, text: "Real stories from real travelers" }}

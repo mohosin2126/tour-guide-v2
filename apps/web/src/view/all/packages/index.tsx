@@ -18,6 +18,7 @@ import { CardSkeleton } from "@/components/ui/loading";
 import PageHero from "@/components/shared/page-hero";
 import Subscribe from "@/view/all/home/subscribe";
 import Title from "@/components/reuseable/title";
+import packagesHeroImage from "@/assets/sea-villages-houses-cliffs-boats-blue-sky-wallpaper-preview.jpg";
 
 export default function PackagesPage() {
   const [search, setSearch] = useState("");
@@ -45,7 +46,7 @@ export default function PackagesPage() {
         title="Discover Your Next Adventure"
         gradientText="Adventure"
         subtitle="Browse handpicked tour packages crafted by expert local guides. From mountain treks to cultural immersions, find the journey that speaks to you."
-        backgroundImage="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600"
+        backgroundImage={packagesHeroImage}
         height="full"
       
         badge={{ icon: Compass, text: "500+ curated experiences" }}

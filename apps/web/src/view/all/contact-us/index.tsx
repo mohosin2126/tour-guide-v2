@@ -49,143 +49,143 @@ export default function ContactUs() {
   };
 
   return (
-    <div>
-      <PageHero
-        title="We'd Love to Hear From You"
-        gradientText="Hear From You"
-        subtitle="Have a question, need help planning your trip, or just want to say hello? Our team is ready to assist you 24/7."
-        backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600"
-        height="full"
-      
-        badge={{ icon: Headphones, text: "24/7 Support Available" }}
-        stats={[
-          { icon: Clock, value: "<1hr", label: "Response" },
-          { icon: Mail, value: "24/7", label: "Available" },
-          { icon: Phone, value: "99%", label: "Satisfaction" },
-        ]}
-      />
+      <div>
+        <PageHero
+            title="We'd Love to Hear From You"
+            gradientText="Hear From You"
+            subtitle="Have a question, need help planning your trip, or just want to say hello? Our team is ready to assist you 24/7."
+            backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600"
+            height="full"
 
-      <div className="custom-container mx-auto mt-12">
-        {/* Contact Cards */}
-        <section className="relative z-10 -mt-16">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {contactCards.map((card) => (
-              <Card key={card.title} className="border-none shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-                <CardContent className="flex flex-col items-center p-6 text-center">
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                    <card.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="mb-2 font-semibold">{card.title}</h3>
-                  {card.lines.map((line, i) => (
-                    <p key={i} className="text-sm text-muted-foreground">{line}</p>
-                  ))}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+            badge={{ icon: Headphones, text: "24/7 Support Available" }}
+            stats={[
+              { icon: Clock, value: "<1hr", label: "Response" },
+              { icon: Mail, value: "24/7", label: "Available" },
+              { icon: Phone, value: "99%", label: "Satisfaction" },
+            ]}
+        />
 
-        {/* Contact Form */}
-        <section className="py-16">
-          <div className="grid items-start gap-12 lg:grid-cols-2">
-            <div>
-              <Title
-                title="Get in Touch"
-                subTitle="Send Us a Message"
-                className="my-0"
-              />
-              <p className="mt-3 text-muted-foreground">
-                Fill out the form and our team will get back to you within 24 hours.
-              </p>
-
-              {sent && (
-                <div className="mt-4 flex items-center gap-2 rounded-lg bg-green-50 p-4 text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                  <CheckCircle size={20} />
-                  <p className="text-sm font-medium">Message sent successfully! We&apos;ll be in touch soon.</p>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Name</Label>
-                    <Input placeholder="Your name" {...register("name", { required: true })} className={errors.name ? "border-red-500" : ""} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input type="email" placeholder="your@email.com" {...register("email", { required: true })} className={errors.email ? "border-red-500" : ""} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Phone</Label>
-                    <Input placeholder="+1 (555) 000-0000" {...register("phone")} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Subject</Label>
-                    <Input placeholder="How can we help?" {...register("subject", { required: true })} className={errors.subject ? "border-red-500" : ""} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Message</Label>
-                  <Textarea
-                    placeholder="Tell us more about your inquiry..."
-                    rows={5}
-                    {...register("message", { required: true })}
-                    className={errors.message ? "border-red-500" : ""}
-                  />
-                </div>
-                <AnimatedButton type="submit" size="lg" disabled={sending}>
-                  {sending ? "Sending..." : "Send Message"}
-                </AnimatedButton>
-              </form>
+        <div className="custom-container mx-auto mt-12">
+          {/* Contact Cards */}
+          <section className="relative z-10 -mt-16">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {contactCards.map((card) => (
+                  <Card key={card.title} className="border-none shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                    <CardContent className="flex flex-col items-center p-6 text-center">
+                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                        <card.icon className="h-7 w-7 text-primary" />
+                      </div>
+                      <h3 className="mb-2 font-semibold">{card.title}</h3>
+                      {card.lines.map((line, i) => (
+                          <p key={i} className="text-sm text-muted-foreground">{line}</p>
+                      ))}
+                    </CardContent>
+                  </Card>
+              ))}
             </div>
+          </section>
 
-            {/* Map / Info sidebar */}
-            <div className="space-y-6">
-              <div className="aspect-[4/3] overflow-hidden rounded-2xl">
-                <iframe
-                  title="Office Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.835434509374!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzA5LjgiVw!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
-                  className="h-full w-full border-0"
-                  allowFullScreen
-                  loading="lazy"
+          {/* Contact Form */}
+          <section className="py-16">
+            <div className="grid items-start gap-12 lg:grid-cols-2">
+              <div>
+                <Title
+                    title="Get in Touch"
+                    subTitle="Send Us a Message"
+                    className="my-0"
                 />
-              </div>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3">
-                    <MessageSquare className="h-6 w-6 text-primary" />
-                    <div>
-                      <h4 className="font-semibold">Prefer Live Chat?</h4>
-                      <p className="text-sm text-muted-foreground">Our support team is available online 24/7 for instant help.</p>
+                <p className="mt-3 text-muted-foreground">
+                  Fill out the form and our team will get back to you within 24 hours.
+                </p>
+
+                {sent && (
+                    <div className="mt-4 flex items-center gap-2 rounded-lg bg-green-50 p-4 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      <CheckCircle size={20} />
+                      <p className="text-sm font-medium">Message sent successfully! We&apos;ll be in touch soon.</p>
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>Name</Label>
+                      <Input placeholder="Your name" {...register("name", { required: true })} className={errors.name ? "border-red-500" : ""} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Email</Label>
+                      <Input type="email" placeholder="your@email.com" {...register("email", { required: true })} className={errors.email ? "border-red-500" : ""} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Phone</Label>
+                      <Input placeholder="+1 (555) 000-0000" {...register("phone")} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Subject</Label>
+                      <Input placeholder="How can we help?" {...register("subject", { required: true })} className={errors.subject ? "border-red-500" : ""} />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+                  <div className="space-y-2">
+                    <Label>Message</Label>
+                    <Textarea
+                        placeholder="Tell us more about your inquiry..."
+                        rows={5}
+                        {...register("message", { required: true })}
+                        className={errors.message ? "border-red-500" : ""}
+                    />
+                  </div>
+                  <AnimatedButton type="submit" size="lg" disabled={sending}>
+                    {sending ? "Sending..." : "Send Message"}
+                  </AnimatedButton>
+                </form>
+              </div>
 
-        {/* FAQ Section */}
-        <section className="pb-16">
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <HelpCircle className="h-6 w-6 text-primary" />
+              {/* Map / Info sidebar */}
+              <div className="space-y-6">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl">
+                  <iframe
+                      title="Office Location"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.835434509374!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzA5LjgiVw!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
+                      className="h-full w-full border-0"
+                      allowFullScreen
+                      loading="lazy"
+                  />
+                </div>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="h-6 w-6 text-primary" />
+                      <div>
+                        <h4 className="font-semibold">Prefer Live Chat?</h4>
+                        <p className="text-sm text-muted-foreground">Our support team is available online 24/7 for instant help.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-            <Title
-              title="Need Help?"
-              subTitle="Frequently Asked Questions"
-              className="my-0"
-            />
-            <p className="text-muted-foreground">Quick answers to common questions</p>
-          </div>
-          <div className="mx-auto max-w-2xl">
-            <Accordion questions={faqItems} />
-          </div>
-        </section>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="pb-16">
+            <div className="mb-8 text-center">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <HelpCircle className="h-6 w-6 text-primary" />
+              </div>
+              <Title
+                  title="Need Help?"
+                  subTitle="Frequently Asked Questions"
+                  className="my-0"
+              />
+              <p className="text-muted-foreground">Quick answers to common questions</p>
+            </div>
+            <div className="mx-auto max-w-2xl">
+              <Accordion questions={faqItems} />
+            </div>
+          </section>
+        </div>
+        <div className="md:w-2/3 mx-auto">
+          <Subscribe />
+        </div>
       </div>
-       <div className="md:w-2/3 mx-auto">
-         <Subscribe />
-       </div>
-    </div>
   );
 }
