@@ -1,4 +1,5 @@
 const express = require("express");
+const crypto = require("crypto");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
@@ -6,9 +7,17 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const seedDatabase = require("./scripts/seed");
 
+if (!process.env.ACCESS_TOKEN_SECRET) {
+  process.env.ACCESS_TOKEN_SECRET = crypto.randomBytes(32).toString("hex");
+  console.log("ACCESS_TOKEN_SECRET auto-generated (tokens won't persist across restarts)");
+}
+
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",")
+  : ["http://localhost:5173", "http://localhost:3000"];
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json());
@@ -63,15 +72,23 @@ app.use((err, req, res, next) => {
 });
 
 
-(async () => {
-  try {
-    await connectDB();
-    await seedDatabase();
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
-})();
+
+connectDB();
+
+
+if (!process.env.VERCEL) {
+  (async () => {
+    try {
+      await seedDatabase();
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
+    } catch (error) {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    }
+  })();
+}
+
+
+module.exports = app;
