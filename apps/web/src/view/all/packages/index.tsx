@@ -166,9 +166,13 @@ export default function PackagesPage() {
                       <span className="flex items-center gap-1 text-lg font-bold text-primary">
                         <DollarSign size={18} />${String(pkg.price)}
                       </span>
-                      {!!pkg.difficulty && (
-                        <Badge variant="outline">{String(pkg.difficulty)}</Badge>
-                      )}
+                     {!!pkg.difficulty && (
+  <Badge variant="outline">
+    {String(pkg.difficulty)
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase())}
+  </Badge>
+)}
                     </CardFooter>
                   </Card>
                 </Link>

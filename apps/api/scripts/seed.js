@@ -421,7 +421,6 @@ async function seedDatabase() {
 
 module.exports = seedDatabase;
 
-// Allow running directly: node scripts/seed.js
 if (require.main === module) {
   require("dotenv").config();
   const mongoose = require("mongoose");
