@@ -1,11 +1,12 @@
-const Category = require("../../models/category");
+﻿const Category = require("../../models/category");
+const { success, notFound, serverError } = require("../../utils/response");
 
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find({ isActive: true });
-    res.json(categories);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", categories);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -13,9 +14,9 @@ const createCategory = async (req, res) => {
   try {
     const category = new Category(req.body);
     await category.save();
-    res.status(201).json(category);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Created", category, 201);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -27,11 +28,11 @@ const updateCategory = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return notFound(res, "Category not found");
     }
-    res.json(category);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", category);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -39,11 +40,11 @@ const deleteCategory = async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return notFound(res, "Category not found");
     }
-    res.json({ message: "Category deleted" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Category deleted");
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 

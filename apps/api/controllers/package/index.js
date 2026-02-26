@@ -1,20 +1,21 @@
-const Package = require("../../models/package");
+﻿const Package = require("../../models/package");
+const { success, notFound, serverError } = require("../../utils/response");
 
 const getPackages = async (req, res) => {
   try {
-    const { 
-      category, 
-      minPrice, 
-      maxPrice, 
-      difficulty, 
-      search, 
+    const {
+      category,
+      minPrice,
+      maxPrice,
+      difficulty,
+      search,
       sort = "-createdAt",
       page = 1,
-      limit = 12
+      limit = 12,
     } = req.query;
-    
+
     const filter = { availability: true, isApproved: true };
-    
+
     if (category) filter.category = category;
     if (difficulty) filter.difficulty = difficulty;
     if (minPrice || maxPrice) {
@@ -25,24 +26,24 @@ const getPackages = async (req, res) => {
     if (search) {
       filter.$text = { $search: search };
     }
-    
+
     const packages = await Package.find(filter)
       .populate("category", "name slug")
       .populate("guide", "name photo rating")
       .sort(sort)
       .limit(limit * 1)
       .skip((page - 1) * limit);
-    
+
     const count = await Package.countDocuments(filter);
-    
-    res.json({
+
+    return success(res, "Success", {
       packages,
       totalPages: Math.ceil(count / limit),
       currentPage: page,
       total: count,
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -51,14 +52,14 @@ const getPackageById = async (req, res) => {
     const pkg = await Package.findById(req.params.id)
       .populate("category", "name slug image")
       .populate("guide", "name photo email phone bio");
-    
+
     if (!pkg) {
-      return res.status(404).json({ error: "Package not found" });
+      return notFound(res, "Package not found");
     }
-    
-    res.json(pkg);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Success", pkg);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -67,10 +68,10 @@ const getGuidePackages = async (req, res) => {
     const packages = await Package.find({ guide: req.params.guideId })
       .populate("category", "name")
       .sort({ createdAt: -1 });
-    
-    res.json(packages);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Success", packages);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -78,14 +79,14 @@ const createPackage = async (req, res) => {
   try {
     const pkg = new Package(req.body);
     await pkg.save();
-    
+
     const populated = await Package.findById(pkg._id)
       .populate("category", "name")
       .populate("guide", "name photo");
-    
-    res.status(201).json(populated);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Created", populated, 201);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -96,14 +97,14 @@ const updatePackage = async (req, res) => {
       req.body,
       { new: true, runValidators: true }
     ).populate("category", "name").populate("guide", "name photo");
-    
+
     if (!pkg) {
-      return res.status(404).json({ error: "Package not found" });
+      return notFound(res, "Package not found");
     }
-    
-    res.json(pkg);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Success", pkg);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -111,11 +112,11 @@ const deletePackage = async (req, res) => {
   try {
     const pkg = await Package.findByIdAndDelete(req.params.id);
     if (!pkg) {
-      return res.status(404).json({ error: "Package not found" });
+      return notFound(res, "Package not found");
     }
-    res.json({ message: "Package deleted" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Package deleted");
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -126,14 +127,14 @@ const approvePackage = async (req, res) => {
       { isApproved: true },
       { new: true }
     );
-    
+
     if (!pkg) {
-      return res.status(404).json({ error: "Package not found" });
+      return notFound(res, "Package not found");
     }
-    
-    res.json({ message: "Package approved", package: pkg });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Package approved", { package: pkg });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -143,10 +144,10 @@ const getPendingPackages = async (req, res) => {
       .populate("category", "name")
       .populate("guide", "name email")
       .sort({ createdAt: -1 });
-    
-    res.json(packages);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    return success(res, "Success", packages);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 

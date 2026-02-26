@@ -39,10 +39,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       return { success: true, user: newUser };
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
+      const err = error as { response?: { data?: { message?: string; error?: string } } };
       return {
         success: false,
-        error: err.response?.data?.error || "Registration failed",
+        error: err.response?.data?.message || err.response?.data?.error || "Registration failed",
       };
     }
   };
@@ -60,10 +60,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       return { success: true, user: newUser };
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
+      const err = error as { response?: { data?: { message?: string; error?: string } } };
       return {
         success: false,
-        error: err.response?.data?.error || "Login failed",
+        error: err.response?.data?.message || err.response?.data?.error || "Login failed",
       };
     }
   };

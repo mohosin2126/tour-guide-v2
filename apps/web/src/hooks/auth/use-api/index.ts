@@ -18,7 +18,13 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const body = response?.data;
+    if (body && typeof body === "object" && "success" in body && "data" in body) {
+      response.data = body.data;
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401 && window.location.pathname !== "/auth/login") {
       Cookies.remove("token");

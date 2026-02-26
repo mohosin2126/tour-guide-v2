@@ -1,12 +1,13 @@
-const User = require("../../models/user");
+﻿const User = require("../../models/user");
+const { success, notFound, serverError } = require("../../utils/response");
 
 const getGuides = async (req, res) => {
   try {
     const guides = await User.find({ role: "guide", isApproved: true, isActive: true })
       .select("-password");
-    res.json(guides);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", guides);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -15,11 +16,11 @@ const getGuideById = async (req, res) => {
     const guide = await User.findOne({ _id: req.params.id, role: "guide" })
       .select("-password");
     if (!guide) {
-      return res.status(404).json({ error: "Guide not found" });
+      return notFound(res, "Guide not found");
     }
-    res.json(guide);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", guide);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -27,9 +28,9 @@ const getPendingGuides = async (req, res) => {
   try {
     const guides = await User.find({ role: "guide", isApproved: false })
       .select("-password");
-    res.json(guides);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", guides);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -40,13 +41,13 @@ const approveGuide = async (req, res) => {
       { isApproved: true },
       { new: true }
     ).select("-password");
-    
+
     if (!guide) {
-      return res.status(404).json({ error: "Guide not found" });
+      return notFound(res, "Guide not found");
     }
-    res.json({ message: "Guide approved", guide });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Guide approved", { guide });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -57,13 +58,13 @@ const rejectGuide = async (req, res) => {
       { role: "user", isApproved: false },
       { new: true }
     ).select("-password");
-    
+
     if (!guide) {
-      return res.status(404).json({ error: "Guide not found" });
+      return notFound(res, "Guide not found");
     }
-    res.json({ message: "Guide rejected", guide });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Guide rejected", { guide });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -71,9 +72,9 @@ const postGuide = async (req, res) => {
   try {
     const guide = req.body;
     const result = await User.create(guide);
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Created", result, 201);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 

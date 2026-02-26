@@ -1,5 +1,13 @@
-const jwt = require("jsonwebtoken");
+﻿const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
+const {
+  success,
+  badRequest,
+  unauthorized,
+  forbidden,
+  notFound,
+  serverError,
+} = require("../../utils/response");
 
 const createToken = (user) => {
   return jwt.sign(
@@ -15,26 +23,30 @@ const register = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
+      return badRequest(res, "User already exists");
     }
 
     const user = new User({ email, password, name, photo });
     await user.save();
 
     const token = createToken(user);
-    res.status(201).json({
-      message: "User registered successfully",
-      token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        photo: user.photo,
-        role: user.role,
+    return success(
+      res,
+      "User registered successfully",
+      {
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          photo: user.photo,
+          role: user.role,
+        },
       },
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+      201
+    );
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -44,21 +56,20 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return unauthorized(res, "Invalid credentials");
     }
 
     if (!user.isActive) {
-      return res.status(403).json({ error: "Account is deactivated" });
+      return forbidden(res, "Account is deactivated");
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return unauthorized(res, "Invalid credentials");
     }
 
     const token = createToken(user);
-    res.json({
-      message: "Login successful",
+    return success(res, "Login successful", {
       token,
       user: {
         id: user._id,
@@ -68,26 +79,25 @@ const login = async (req, res) => {
         role: user.role,
       },
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
 const getToken = async (req, res) => {
   try {
-  
     const { email } = req.decoded;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      return unauthorized(res, "User not found");
     }
     if (!user.isActive) {
-      return res.status(403).json({ error: "Account is deactivated" });
+      return forbidden(res, "Account is deactivated");
     }
     const token = createToken(user);
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", { token });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 

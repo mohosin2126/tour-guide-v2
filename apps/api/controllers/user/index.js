@@ -1,11 +1,20 @@
-const User = require("../../models/user");
+﻿const User = require("../../models/user");
+const {
+  success,
+  badRequest,
+  unauthorized,
+  forbidden,
+  notFound,
+  conflict,
+  serverError,
+} = require("../../utils/response");
 
 const getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", users);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -14,11 +23,11 @@ const getUserByEmail = async (req, res) => {
     const email = req.query.email;
     const user = await User.findOne({ email }).select("-password");
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", user);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -26,11 +35,11 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", user);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -51,13 +60,13 @@ const updateUser = async (req, res) => {
       updateData,
       { new: true, runValidators: true }
     ).select("-password");
-    
+
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", user);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -66,13 +75,13 @@ const postUser = async (req, res) => {
     const user = req.body;
     const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
-      return res.send({ message: "user already exists", insertedId: null });
+      return conflict(res, "user already exists");
     }
     const newUser = new User(user);
     await newUser.save();
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Created", newUser, 201);
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -84,13 +93,13 @@ const makeAdmin = async (req, res) => {
       { role: "admin" },
       { new: true }
     ).select("-password");
-    
+
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json({ message: "User is now an admin", user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "User is now an admin", { user });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -98,12 +107,12 @@ const checkAdmin = async (req, res) => {
   try {
     const email = req.params.email;
     if (email !== req.decoded.email) {
-      return res.stats(403).send({ message: "unauthorized access" });
+      return forbidden(res, "unauthorized access");
     }
     const user = await User.findOne({ email });
-    res.send({ admin: user?.role === "admin" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", { admin: user?.role === "admin" });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -115,13 +124,13 @@ const makeGuide = async (req, res) => {
       { role: "guide", isApproved: true },
       { new: true }
     ).select("-password");
-    
+
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json({ message: "User is now a guide", user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "User is now a guide", { user });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -129,12 +138,12 @@ const checkGuide = async (req, res) => {
   try {
     const email = req.params.email;
     if (email !== req.decoded.email) {
-      return res.status(403).send({ message: "unauthorized access" });
+      return forbidden(res, "unauthorized access");
     }
     const user = await User.findOne({ email });
-    res.send({ guide: user?.role === "guide" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Success", { guide: user?.role === "guide" });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -143,7 +152,7 @@ const updateRole = async (req, res) => {
     const { role } = req.body;
     const validRoles = ["user", "guide", "admin"];
     if (!validRoles.includes(role)) {
-      return res.status(400).json({ error: "Invalid role. Must be user, guide, or admin" });
+      return badRequest(res, "Invalid role. Must be user, guide, or admin");
     }
     const updateData = { role };
     if (role === "guide" || role === "admin") {
@@ -158,11 +167,11 @@ const updateRole = async (req, res) => {
       { new: true }
     ).select("-password");
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json({ message: `Role updated to ${role}`, user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, `Role updated to ${role}`, { user });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -170,24 +179,24 @@ const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ error: "Current and new password are required" });
+      return badRequest(res, "Current and new password are required");
     }
     if (newPassword.length < 6) {
-      return res.status(400).json({ error: "New password must be at least 6 characters" });
+      return badRequest(res, "New password must be at least 6 characters");
     }
     const user = await User.findById(req.decoded.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
-      return res.status(401).json({ error: "Current password is incorrect" });
+      return unauthorized(res, "Current password is incorrect");
     }
     user.password = newPassword;
     await user.save();
-    res.json({ message: "Password updated successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Password updated successfully");
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -206,11 +215,11 @@ const updateNotificationPreferences = async (req, res) => {
       { new: true }
     ).select("-password");
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
-    res.json({ message: "Notification preferences updated", user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, "Notification preferences updated", { user });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
@@ -218,13 +227,13 @@ const toggleUserStatus = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return notFound(res, "User not found");
     }
     user.isActive = !user.isActive;
     await user.save();
-    res.json({ message: `User ${user.isActive ? 'activated' : 'deactivated'}`, user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return success(res, `User ${user.isActive ? "activated" : "deactivated"}`, { user });
+  } catch (err) {
+    return serverError(res, err.message, err.message);
   }
 };
 
