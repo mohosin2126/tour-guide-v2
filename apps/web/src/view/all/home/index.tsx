@@ -129,10 +129,10 @@ export default function HomePage() {
               <p className="text-muted-foreground">No packages found in this category</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4">
               {filteredPackages.slice(0, 8).map((pkg: Record<string, unknown>) => (
-                <Link key={pkg._id as string} to={`/packages/${pkg._id}`}>
-                  <Card className="group overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <Link key={pkg._id as string} to={`/packages/${pkg._id}`} className="block h-full">
+                  <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img
                         src={
@@ -154,11 +154,11 @@ export default function HomePage() {
                         </div>
                       ) : null}
                     </div>
-                    <CardContent className="p-4">
+                    <CardContent className="flex-1 p-4">
                       <h3 className="line-clamp-1 text-lg font-semibold transition-colors group-hover:text-primary">
                         {String(pkg.title)}
                       </h3>
-                      <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
+                      <div className="mt-2 flex min-h-5 items-center gap-3 text-sm text-muted-foreground">
                         {!!pkg.duration && (
                           <span className="flex items-center gap-1">
                             <Clock size={14} />
@@ -166,14 +166,16 @@ export default function HomePage() {
                           </span>
                         )}
                         {!!(pkg.startLocation || pkg.location) && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex min-w-0 items-center gap-1">
                             <MapPin size={14} />
-                            {String(pkg.startLocation || pkg.location)}
+                            <span className="line-clamp-1">
+                              {String(pkg.startLocation || pkg.location)}
+                            </span>
                           </span>
                         )}
                       </div>
                     </CardContent>
-                    <CardFooter className="flex items-center justify-between border-t px-4 py-3">
+                    <CardFooter className="mt-auto flex items-center justify-between border-t px-4 py-3">
                       <span className="flex items-center gap-1 text-lg font-bold text-primary">
                         <DollarSign size={18} />{String(pkg.price)}
                       </span>
