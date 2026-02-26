@@ -27,7 +27,15 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function GuideReviews() {
   const { user } = useAuth();
-  const { data: reviews, isLoading } = useGuideReviews(user?._id) as { data: ReviewRecord[] | undefined; isLoading: boolean };
+  const { data: reviewPayload, isLoading } = useGuideReviews(user?._id) as {
+    data: { reviews?: ReviewRecord[] } | ReviewRecord[] | undefined;
+    isLoading: boolean;
+  };
+  const reviews = Array.isArray(reviewPayload)
+    ? reviewPayload
+    : Array.isArray(reviewPayload?.reviews)
+      ? reviewPayload.reviews
+      : [];
 
   const avgRating =
     reviews && reviews.length > 0

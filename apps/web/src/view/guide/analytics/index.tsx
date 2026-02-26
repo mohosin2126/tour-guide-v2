@@ -29,8 +29,16 @@ interface PackageRecord {
 export default function GuideAnalytics() {
   const { user } = useAuth();
   const { data: bookings, isLoading: bl } = useGuideBookings() as { data: BookingRecord[] | undefined; isLoading: boolean };
-  const { data: reviews, isLoading: rl } = useGuideReviews(user?._id) as { data: ReviewRecord[] | undefined; isLoading: boolean };
+  const { data: reviewPayload, isLoading: rl } = useGuideReviews(user?._id) as {
+    data: { reviews?: ReviewRecord[] } | ReviewRecord[] | undefined;
+    isLoading: boolean;
+  };
   const { data: packages, isLoading: pl } = useGuidePackages(user?._id) as { data: PackageRecord[] | undefined; isLoading: boolean };
+  const reviews = Array.isArray(reviewPayload)
+    ? reviewPayload
+    : Array.isArray(reviewPayload?.reviews)
+      ? reviewPayload.reviews
+      : [];
 
   if (bl || rl || pl) return <PageLoader />;
 

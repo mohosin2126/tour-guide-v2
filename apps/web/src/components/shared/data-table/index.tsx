@@ -31,6 +31,7 @@ export default function DataTable<T>({
 }: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const rows = Array.isArray(data) ? data : [];
 
   const handleSort = (key: string) => {
     if (sortKey === key) {
@@ -41,7 +42,7 @@ export default function DataTable<T>({
     }
   };
 
-  if (data.length === 0 && emptyState) {
+  if (rows.length === 0 && emptyState) {
     return <>{emptyState}</>;
   }
 
@@ -83,7 +84,7 @@ export default function DataTable<T>({
             </tr>
           </thead>
           <tbody className="divide-y">
-            {data.map((row, i) => (
+            {rows.map((row, i) => (
               <tr
                 key={keyExtractor(row)}
                 className={cn(

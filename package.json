@@ -20,7 +20,7 @@
   "packageManager": "pnpm@10.30.1",
   "lint-staged": {
     "apps/web/**/*.{ts,tsx}": [
-      "eslint --fix --max-warnings 0"
+      "pnpm --filter tour-guide-client exec eslint --fix --max-warnings 0"
     ]
   },
   "devDependencies": {
