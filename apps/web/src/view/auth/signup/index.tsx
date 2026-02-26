@@ -78,8 +78,12 @@ export default function SignUp() {
         toast.error(result.error || "Registration failed");
       }
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Registration failed. Please try again.");
+      const axiosErr = err as { response?: { data?: { message?: string; error?: string } } };
+      setError(
+        axiosErr.response?.data?.message
+          || axiosErr.response?.data?.error
+          || "Registration failed. Please try again."
+      );
       toast.error("Registration failed");
     } finally {
       setLoading(false);

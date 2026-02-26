@@ -64,8 +64,8 @@ export default function Login() {
         toast.error(result.error || "Invalid email or password");
       }
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Invalid email or password");
+      const axiosErr = err as { response?: { data?: { message?: string; error?: string } } };
+      setError(axiosErr.response?.data?.message || axiosErr.response?.data?.error || "Invalid email or password");
       toast.error("Login failed");
     } finally {
       setLoading(false);
@@ -84,8 +84,8 @@ export default function Login() {
         setError(result.error || "Demo login failed. Please ensure the database is seeded.");
       }
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Demo login failed");
+      const axiosErr = err as { response?: { data?: { message?: string; error?: string } } };
+      setError(axiosErr.response?.data?.message || axiosErr.response?.data?.error || "Demo login failed");
     } finally {
       setDemoLoading(null);
     }
